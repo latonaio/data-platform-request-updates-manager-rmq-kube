@@ -28,6 +28,7 @@ type Header struct {
 }
 
 type Item struct {
+	BillOfMaterial                                 int      `json:"BillOfMaterial"`
 	BillOfMaterialItem                             int      `json:"BillOfMaterialItem"`
 	ComponentProductStandardQuantityInBaseUnit     float32  `json:"ComponentProductStandardQuantityInBaseUnit"`
 	ComponentProductStandardQuantityInDeliveryUnit float32  `json:"ComponentProductStandardQuantityInDeliveryUnit"`
@@ -123,14 +124,15 @@ func BillOfMaterialRequestItemUpdates(
 	var items []Item
 
 	items = append(items, Item{
-		BillOfMaterialItem:                             *billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].BillOfMaterialItem,
-		ComponentProductStandardQuantityInBaseUnit:     *billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].ComponentProductStandardQuantityInBaseUnit,
-		ComponentProductStandardQuantityInDeliveryUnit: *billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].ComponentProductStandardQuantityInDeliveryUnit,
-		ComponentProductStandardScrapInPercent:         billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].ComponentProductStandardScrapInPercent,
-		IsMarkedForBackflush:                           billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].IsMarkedForBackflush,
-		BillOfMaterialItemText:                         billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].BillOfMaterialItemText,
-		ValidityStartDate:                              billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].ValidityStartDate,
-		ValidityEndDate:                                billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].ValidityEndDate,
+		BillOfMaterial:     *billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].BillOfMaterial,
+		BillOfMaterialItem: *billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].BillOfMaterialItem,
+		ComponentProductStandardQuantityInBaseUnit: *billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].ComponentProductStandardQuantityInBaseUnit,
+		//ComponentProductStandardQuantityInDeliveryUnit: *billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].ComponentProductStandardQuantityInDeliveryUnit,
+		ComponentProductStandardScrapInPercent: billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].ComponentProductStandardScrapInPercent,
+		IsMarkedForBackflush:                   billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].IsMarkedForBackflush,
+		BillOfMaterialItemText:                 billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].BillOfMaterialItemText,
+		ValidityStartDate:                      billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].ValidityStartDate,
+		ValidityEndDate:                        billOfMaterialHeader.BillOfMaterialHeader.BillOfMaterialItem[0].ValidityEndDate,
 	})
 
 	request = CreateBillOfMaterialUpdatesRequestItemUpdates(

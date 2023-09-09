@@ -1,6 +1,6 @@
 package apiOutputFormatter
 
-type SDC struct {
+type BillOfMaterialSDC struct {
 	ConnectionKey       string      `json:"connection_key"`
 	Result              bool        `json:"result"`
 	RedisKey            string      `json:"redis_key"`
@@ -24,23 +24,18 @@ type SDC struct {
 	APIProcessingError  string      `json:"api_processing_error"`
 }
 
-type Message struct {
-	Header *Header `json:"Header"`
-	Item   *[]Item `json:"Item"`
+type BillOfMaterialHeader struct {
+	BillOfMaterial                          int                  `json:"BillOfMaterial"`
+	ProductStandardQuantityInBaseUnit       float32              `json:"ProductStandardQuantityInBaseUnit"`
+	ProductStandardQuantityInDeliveryUnit   float32              `json:"ProductStandardQuantityInDeliveryUnit"`
+	ProductStandardQuantityInProductionUnit float32              `json:"ProductStandardQuantityInProductionUnit"`
+	BillOfMaterialHeaderText                *string              `json:"BillOfMaterialHeaderText"`
+	ValidityStartDate                       *string              `json:"ValidityStartDate"`
+	ValidityEndDate                         *string              `json:"ValidityEndDate"`
+	Item                                    []BillOfMaterialItem `json:"BillOfMaterialItem"`
 }
 
-type Header struct {
-	BillOfMaterial                          int     `json:"BillOfMaterial"`
-	ProductStandardQuantityInBaseUnit       float32 `json:"ProductStandardQuantityInBaseUnit"`
-	ProductStandardQuantityInDeliveryUnit   float32 `json:"ProductStandardQuantityInDeliveryUnit"`
-	ProductStandardQuantityInProductionUnit float32 `json:"ProductStandardQuantityInProductionUnit"`
-	BillOfMaterialHeaderText                *string `json:"BillOfMaterialHeaderText"`
-	ValidityStartDate                       *string `json:"ValidityStartDate"`
-	ValidityEndDate                         *string `json:"ValidityEndDate"`
-	Item                                    []Item  `json:"Item"`
-}
-
-type Item struct {
+type BillOfMaterialItem struct {
 	BillOfMaterial                                 int      `json:"BillOfMaterial"`
 	BillOfMaterialItem                             int      `json:"BillOfMaterialItem"`
 	ComponentProductStandardQuantityInBaseUnit     float32  `json:"ComponentProductStandardQuantityInBaseUnit"`

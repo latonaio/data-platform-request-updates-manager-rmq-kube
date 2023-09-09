@@ -34,8 +34,8 @@ func (
 ) BillOfMaterialRequestItemUpdates(
 	requestPram *apiInputReader.Request,
 	input apiInputReader.BillOfMaterialSDC,
-) *apiOutputFormatter.SDC {
-	responseJsonData := apiOutputFormatter.SDC{}
+) *apiOutputFormatter.BillOfMaterialSDC {
+	responseJsonData := apiOutputFormatter.BillOfMaterialSDC{}
 	responseBody := apiModuleRuntimesRequestsBillOfMaterial.BillOfMaterialRequestItemUpdates(
 		requestPram,
 		input,
@@ -60,7 +60,7 @@ func (
 ) request(
 	input apiInputReader.BillOfMaterialSDC,
 ) {
-	var bRes *apiOutputFormatter.SDC
+	var bRes *apiOutputFormatter.BillOfMaterialSDC
 
 	bRes = controller.BillOfMaterialRequestItemUpdates(
 		controller.UserInfo,

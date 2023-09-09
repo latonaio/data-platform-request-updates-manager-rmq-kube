@@ -5,6 +5,7 @@ import (
 	"data-platform-request-updates-manager-rmq-kube/config"
 	controllersBillOfMaterialDetailList "data-platform-request-updates-manager-rmq-kube/controllers/bill-of-material/detail-list"
 	controllersBillOfMaterialList "data-platform-request-updates-manager-rmq-kube/controllers/bill-of-material/list"
+	controllersProductionOrderItemOperation "data-platform-request-updates-manager-rmq-kube/controllers/production-order-confirmation/item-operation"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
 	"github.com/astaxie/beego/plugins/cors"
@@ -28,6 +29,10 @@ func init() {
 		CustomLogger: l,
 	}
 
+	productionOrderConfirmationItemOperationController := &controllersProductionOrderItemOperation.ProductionOrderConfirmationItemOperationController{
+		CustomLogger: l,
+	}
+
 	billOfMaterial := beego.NewNamespace(
 		"/bill-of-material",
 		beego.NSCond(func(ctx *context.Context) bool { return true }),
@@ -35,8 +40,15 @@ func init() {
 		beego.NSRouter("/item/updates", billOfMaterialDetailListController),
 	)
 
+	productionOrderConfirmation := beego.NewNamespace(
+		"/production-order-confirmation",
+		beego.NSCond(func(ctx *context.Context) bool { return true }),
+		beego.NSRouter("/header/updates", productionOrderConfirmationItemOperationController),
+	)
+
 	beego.AddNamespace(
 		billOfMaterial,
+		productionOrderConfirmation,
 	)
 
 	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{

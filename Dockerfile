@@ -16,6 +16,8 @@ RUN apk add --no-cache libc6-compat
 ENV SERVICE=data-platform-request-updates-manager-rmq-kube \
     APP_DIR="${AION_HOME}/${POSITION}/${SERVICE}"
 
+COPY . .
+
 WORKDIR ${AION_HOME}
 
 COPY --from=builder /go/src/github.com/latonaio/data-platform-request-updates-manager-rmq-kube .

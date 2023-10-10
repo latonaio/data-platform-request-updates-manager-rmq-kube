@@ -32,7 +32,7 @@ type Header struct {
 	ConfirmationEntryDate                    *string  `json:"ConfirmationEntryDate"`
 	ConfirmationEntryTime                    *string  `json:"ConfirmationEntryTime"`
 	ConfirmationText                         *string  `json:"ConfirmationText"`
-	IsFinalConfirmation                      *string  `json:"IsFinalConfirmation"`
+	IsFinalConfirmation                      *bool	  `json:"IsFinalConfirmation"`
 	WorkCenter                               int      `json:"WorkCenter"`
 	EmployeeIDWhoConfirmed                   int      `json:"EmployeeIDWhoConfirmed"`
 	ConfirmedExecutionStartDate              *string  `json:"ConfirmedExecutionStartDate"`

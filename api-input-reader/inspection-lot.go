@@ -24,28 +24,51 @@ type InspectionLotSDC struct {
 
 type InspectionLotHeader struct {
 	InspectionLot                  int     `json:"InspectionLot"`
-	InspectionPlan                 *int    `json:"InspectionPlan"`
-	InspectionPlantBusinessPartner *int    `json:"InspectionPlantBusinessPartner"`
-	InspectionPlant                *string `json:"InspectionPlant"`
-	Product                        *string `json:"Product"`
+	InspectionLotDate              string  `json:"InspectionLotDate"`
+	InspectionPlan                 int     `json:"InspectionPlan"`
+	InspectionPlantBusinessPartner int     `json:"InspectionPlantBusinessPartner"`
+	InspectionPlant                string  `json:"InspectionPlant"`
+	Product                        string  `json:"Product"`
 	ProductSpecification           *string `json:"ProductSpecification"`
 	InspectionSpecification        *string `json:"InspectionSpecification"`
 	ProductionOrder                *int    `json:"ProductionOrder"`
 	ProductionOrderItem            *int    `json:"ProductionOrderItem"`
 	InspectionLotHeaderText        *string `json:"InspectionLotHeaderText"`
+	ExternalReferenceDocument      *string  `json:"ExternalReferenceDocument"`
+	CertificateAuthorityChain      *string  `json:"CertificateAuthorityChain"`
+	UsageControlChain        	   *string  `json:"UsageControlChain"`
+	CreationDate                   string   `json:"CreationDate"`
+	CreationTime                   string   `json:"CreationTime"`
+	LastChangeDate                 string   `json:"LastChangeDate"`
+	LastChangeTime                 string   `json:"LastChangeTime"`
+	IsReleased                     *bool    `json:"IsReleased"`
+	IsPartiallyConfirmed           *bool    `json:"IsPartiallyConfirmed"`
+	IsConfirmed                    *bool    `json:"IsConfirmed"`
+	IsLocked                       *bool    `json:"IsLocked"`
+	IsCancelled                    *bool    `json:"IsCancelled"`
+	IsMarkedForDeletion            *bool    `json:"IsMarkedForDeletion"`
 	InspectionLotInspection        []InspectionLotInspection	`json:"Inspection"`
 }
 
 type InspectionLotInspection struct {
-	InspectionLot	                            int	        `json:"InspectionLot"`
-    Inspection	                                int	        `json:"Inspection"`
-    InspectionType                            	*string	    `json:"InspectionType"`
-    InspectionTypeValueUnit	                    *string	    `json:"InspectionTypeValueUnit"`
-    InspectionTypePlannedValue	                *float32	`json:"InspectionTypePlannedValue"`
-    InspectionTypeCertificateType	            *string	    `json:"InspectionTypeCertificateType"`
-    InspectionTypeCertificateValueInText	    *string	    `json:"InspectionTypeCertificateValueInText"`
-    InspectionTypeCertificateValueInQuantity	*float32	`json:"InspectionTypeCertificateValueInQuantity"`
-    InspectionLotInspectionText	                *string	    `json:"InspectionLotInspectionText"`
+	InspectionLot	                            int	     `json:"InspectionLot"`
+    Inspection	                                int	     `json:"Inspection"`
+	InspectionDate				                string   `json:"InspectionDate"`
+    InspectionType                            	string	 `json:"InspectionType"`
+    InspectionTypeValueUnit	                    *string	 `json:"InspectionTypeValueUnit"`
+    InspectionTypePlannedValue	                *float32 `json:"InspectionTypePlannedValue"`
+    InspectionTypeCertificateType	            *string	 `json:"InspectionTypeCertificateType"`
+    InspectionTypeCertificateValueInText	    *string	 `json:"InspectionTypeCertificateValueInText"`
+    InspectionTypeCertificateValueInQuantity	*float32 `json:"InspectionTypeCertificateValueInQuantity"`
+    InspectionLotInspectionText	                *string	 `json:"InspectionLotInspectionText"`
+	CreationDate            					string   `json:"CreationDate"`
+	CreationTime            					string   `json:"CreationTime"`
+	LastChangeDate          					string   `json:"LastChangeDate"`
+	LastChangeTime          					string   `json:"LastChangeTime"`
+	IsReleased              					*bool    `json:"IsReleased"`
+	IsLocked                					*bool    `json:"IsLocked"`
+	IsCancelled             					*bool    `json:"IsCancelled"`
+	IsMarkedForDeletion     					*bool    `json:"IsMarkedForDeletion"`
 }
 
 func InspectionLotInputRead(

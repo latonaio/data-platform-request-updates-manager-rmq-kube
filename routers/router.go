@@ -5,6 +5,8 @@ import (
 	"data-platform-request-updates-manager-rmq-kube/config"
 	controllersBillOfMaterialDetailList "data-platform-request-updates-manager-rmq-kube/controllers/bill-of-material/detail-list"
 	controllersBillOfMaterialList "data-platform-request-updates-manager-rmq-kube/controllers/bill-of-material/list"
+	controllersDeliveryDocumentItemSingleUnit "data-platform-request-updates-manager-rmq-kube/controllers/delivery-document/item-single-unit"
+	controllersOrdersItemSingleUnit "data-platform-request-updates-manager-rmq-kube/controllers/orders/item-single-unit"
 	controllersProductionOrderItemOperation "data-platform-request-updates-manager-rmq-kube/controllers/production-order-confirmation/item-operation"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
@@ -21,6 +23,14 @@ func init() {
 	_ = cache.NewCache(conf.REDIS.Address, conf.REDIS.Port, l, 1, &redisTokenCacheKeyPrefix)
 	//redisTokenCache := cache.NewCache(conf.REDIS.Address, conf.REDIS.Port, l, 1)
 
+	ordersItemSingleUnitController := &controllersOrdersItemSingleUnit.OrdersItemSingleUnitController{
+		CustomLogger: l,
+	}
+
+	deliveryDocumentItemSingleUnitController := &controllersDeliveryDocumentItemSingleUnit.DeliveryDocumentItemSingleUnitController{
+		CustomLogger: l,
+	}
+
 	billOfMaterialListController := &controllersBillOfMaterialList.BillOfMaterialListController{
 		CustomLogger: l,
 	}
@@ -32,6 +42,18 @@ func init() {
 	productionOrderConfirmationItemOperationController := &controllersProductionOrderItemOperation.ProductionOrderConfirmationItemOperationController{
 		CustomLogger: l,
 	}
+
+	orders := beego.NewNamespace(
+		"/orders",
+		beego.NSCond(func(ctx *context.Context) bool { return true }),
+		beego.NSRouter("/item/updates", ordersItemSingleUnitController),
+	)
+
+	deliveryDocument := beego.NewNamespace(
+		"/delivery-document",
+		beego.NSCond(func(ctx *context.Context) bool { return true }),
+		beego.NSRouter("/item/updates", deliveryDocumentItemSingleUnitController),
+	)
 
 	billOfMaterial := beego.NewNamespace(
 		"/bill-of-material",
@@ -47,6 +69,8 @@ func init() {
 	)
 
 	beego.AddNamespace(
+		orders,
+		deliveryDocument,
 		billOfMaterial,
 		productionOrderConfirmation,
 	)

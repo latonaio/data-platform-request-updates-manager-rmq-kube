@@ -354,13 +354,14 @@ func DeliveryDocumentRequestItemUpdates(
 	var items []Item
 
 	items = append(items, Item{
-		DeliveryDocument:          (deliveryDocumentHeader.Header.Item)[0].DeliveryDocument,
-		DeliveryDocumentItem:      (deliveryDocumentHeader.Header.Item)[0].DeliveryDocumentItem,
-		PlannedGoodsIssueDate:     (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsIssueDate,
-		PlannedGoodsIssueTime:     (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsIssueTime,
-		PlannedGoodsReceiptDate:   (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsReceiptDate,
-		PlannedGoodsReceiptTime:   (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsReceiptTime,
-		PlannedGoodsIssueQuantity: (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsIssueQuantity,
+		DeliveryDocument:               (deliveryDocumentHeader.Header.Item)[0].DeliveryDocument,
+		DeliveryDocumentItem:           (deliveryDocumentHeader.Header.Item)[0].DeliveryDocumentItem,
+		PlannedGoodsIssueDate:          (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsIssueDate,
+		PlannedGoodsIssueTime:          (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsIssueTime,
+		PlannedGoodsReceiptDate:        (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsReceiptDate,
+		PlannedGoodsReceiptTime:        (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsReceiptTime,
+		PlannedGoodsIssueQuantity:      (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsIssueQuantity,
+		PlannedGoodsIssueQtyInBaseUnit: (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsIssueQtyInBaseUnit,
 	})
 
 	request = CreateDeliveryDocumentUpdatesRequestItemUpdates(

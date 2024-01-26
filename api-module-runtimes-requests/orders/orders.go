@@ -398,6 +398,7 @@ func OrdersRequestItemUpdates(
 		OrderStatus:                 (*ordersHeader.Header.Item)[0].OrderStatus,
 		RequestedDeliveryDate:       (*ordersHeader.Header.Item)[0].RequestedDeliveryDate,
 		RequestedDeliveryTime:       (*ordersHeader.Header.Item)[0].RequestedDeliveryTime,
+		OrderQuantityInBaseUnit:     (*ordersHeader.Header.Item)[0].OrderQuantityInBaseUnit,
 		OrderQuantityInDeliveryUnit: (*ordersHeader.Header.Item)[0].OrderQuantityInDeliveryUnit,
 	})
 

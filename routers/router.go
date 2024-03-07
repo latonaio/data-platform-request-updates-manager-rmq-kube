@@ -5,7 +5,11 @@ import (
 	"data-platform-request-updates-manager-rmq-kube/config"
 	controllersBillOfMaterialDetailList "data-platform-request-updates-manager-rmq-kube/controllers/bill-of-material/detail-list"
 	controllersBillOfMaterialList "data-platform-request-updates-manager-rmq-kube/controllers/bill-of-material/list"
+	controllersDeliveryDocumentFunctionActualGoodsIssuePosting "data-platform-request-updates-manager-rmq-kube/controllers/delivery-document/function-actual-goods-issue-posting"
+	controllersDeliveryDocumentFunctionActualGoodsReceiptPosting "data-platform-request-updates-manager-rmq-kube/controllers/delivery-document/function-actual-goods-receipt-posting"
+	controllersDeliveryDocumentFunctionReferFromOrders "data-platform-request-updates-manager-rmq-kube/controllers/delivery-document/function-refer-from-orders"
 	controllersDeliveryDocumentItemSingleUnit "data-platform-request-updates-manager-rmq-kube/controllers/delivery-document/item-single-unit"
+	controllersOrdersFunctionReferFromQuotations "data-platform-request-updates-manager-rmq-kube/controllers/orders/function-refer-from-quotations"
 	controllersOrdersItemSingleUnit "data-platform-request-updates-manager-rmq-kube/controllers/orders/item-single-unit"
 	controllersProductionOrderItemOperation "data-platform-request-updates-manager-rmq-kube/controllers/production-order-confirmation/item-operation"
 	"github.com/astaxie/beego"
@@ -27,7 +31,23 @@ func init() {
 		CustomLogger: l,
 	}
 
+	ordersFunctionReferFromQuotationsController := &controllersOrdersFunctionReferFromQuotations.OrdersFunctionReferFromQuotationsController{
+		CustomLogger: l,
+	}
+
 	deliveryDocumentItemSingleUnitController := &controllersDeliveryDocumentItemSingleUnit.DeliveryDocumentItemSingleUnitController{
+		CustomLogger: l,
+	}
+
+	deliveryDocumentFunctionActualGoodsIssuePostingController := &controllersDeliveryDocumentFunctionActualGoodsIssuePosting.DeliveryDocumentFunctionActualGoodsIssuePostingController{
+		CustomLogger: l,
+	}
+
+	deliveryDocumentFunctionActualGoodsReceiptPostingController := &controllersDeliveryDocumentFunctionActualGoodsReceiptPosting.DeliveryDocumentFunctionActualGoodsReceiptPostingController{
+		CustomLogger: l,
+	}
+
+	deliveryDocumentFunctionReferFromOrdersController := &controllersDeliveryDocumentFunctionReferFromOrders.DeliveryDocumentFunctionReferFromOrdersController{
 		CustomLogger: l,
 	}
 
@@ -47,12 +67,16 @@ func init() {
 		"/orders",
 		beego.NSCond(func(ctx *context.Context) bool { return true }),
 		beego.NSRouter("/item/updates", ordersItemSingleUnitController),
+		beego.NSRouter("/function-refer-from-quotations/creates", ordersFunctionReferFromQuotationsController),
 	)
 
 	deliveryDocument := beego.NewNamespace(
 		"/delivery-document",
 		beego.NSCond(func(ctx *context.Context) bool { return true }),
 		beego.NSRouter("/item/updates", deliveryDocumentItemSingleUnitController),
+		beego.NSRouter("/function-actual-goods-issue-posting/updates", deliveryDocumentFunctionActualGoodsIssuePostingController),
+		beego.NSRouter("/function-actual-goods-receipt-posting/updates", deliveryDocumentFunctionActualGoodsReceiptPostingController),
+		beego.NSRouter("/function-refer-from-orders/creates", deliveryDocumentFunctionReferFromOrdersController),
 	)
 
 	billOfMaterial := beego.NewNamespace(

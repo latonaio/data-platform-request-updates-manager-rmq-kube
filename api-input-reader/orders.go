@@ -7,19 +7,25 @@ import (
 )
 
 type OrdersSDC struct {
-	ConnectionKey    string       `json:"connection_key"`
-	Result           bool         `json:"result"`
-	RedisKey         string       `json:"redis_key"`
-	Filepath         string       `json:"filepath"`
-	APIStatusCode    int          `json:"api_status_code"`
-	RuntimeSessionID string       `json:"runtime_session_id"`
-	BusinessPartner  *int         `json:"business_partner"`
-	ServiceLabel     string       `json:"service_label"`
-	APIType          string       `json:"api_type"`
-	Header           OrdersHeader `json:"Orders"`
-	APISchema        string       `json:"api_schema"`
-	Accepter         []string     `json:"accepter"`
-	Deleted          bool         `json:"deleted"`
+	ConnectionKey    string                 `json:"connection_key"`
+	Result           bool                   `json:"result"`
+	RedisKey         string                 `json:"redis_key"`
+	Filepath         string                 `json:"filepath"`
+	APIStatusCode    int                    `json:"api_status_code"`
+	RuntimeSessionID string                 `json:"runtime_session_id"`
+	BusinessPartner  *int                   `json:"business_partner"`
+	ServiceLabel     string                 `json:"service_label"`
+	APIType          string                 `json:"api_type"`
+	InputParameters  *OrdersInputParameters `json:"InputParameters"`
+	Header           OrdersHeader           `json:"Orders"`
+	APISchema        string                 `json:"api_schema"`
+	Accepter         []string               `json:"accepter"`
+	Deleted          bool                   `json:"deleted"`
+}
+
+type OrdersInputParameters struct {
+	ReferenceDocument     *int `json:"ReferenceDocument"`
+	ReferenceDocumentItem *int `json:"ReferenceDocumentItem"`
 }
 
 type OrdersHeader struct {
@@ -239,52 +245,52 @@ type OrdersItem struct {
 }
 
 type OrdersItemPricingElement struct {
-	OrderID                    int      `json:"OrderID"`
-	OrderItem                  int      `json:"OrderItem"`
-	PricingProcedureCounter    int      `json:"PricingProcedureCounter"`
-	SupplyChainRelationshipID  *int     `json:"SupplyChainRelationshipID"`
-	Buyer                      *int     `json:"Buyer"`
-	Seller                     *int     `json:"Seller"`
-	ConditionRecord            *int     `json:"ConditionRecord"`
-	ConditionSequentialNumber  *int     `json:"ConditionSequentialNumber"`
-	ConditionType              *string  `json:"ConditionType"`
-	PricingDate                *string  `json:"PricingDate"`
-	ConditionRateValue         *float32 `json:"ConditionRateValue"`
-	ConditionRateValueUnit     *int     `json:"ConditionRateValueUnit"`
-	ConditionScaleQuantity     *int     `json:"ConditionScaleQuantity"`
-	ConditionCurrency          *string  `json:"ConditionCurrency"`
-	ConditionQuantity          *float32 `json:"ConditionQuantity"`
-	TaxCode                    *string  `json:"TaxCode"`
-	ConditionAmount            *float32 `json:"ConditionAmount"`
-	TransactionCurrency        *string  `json:"TransactionCurrency"`
-	ConditionIsManuallyChanged *bool    `json:"ConditionIsManuallyChanged"`
-	CreationDate               *string  `json:"CreationDate"`
-	CreationTime               *string  `json:"CreationTime"`
-	LastChangeDate             *string  `json:"LastChangeDate"`
-	LastChangeTime             *string  `json:"LastChangeTime"`
-	IsCancelled                *bool    `json:"IsCancelled"`
-	IsMarkedForDeletion        *bool    `json:"IsMarkedForDeletion"`
+	OrderID                    int     `json:"OrderID"`
+	OrderItem                  int     `json:"OrderItem"`
+	PricingProcedureCounter    int     `json:"PricingProcedureCounter"`
+	SupplyChainRelationshipID  int     `json:"SupplyChainRelationshipID"`
+	Buyer                      int     `json:"Buyer"`
+	Seller                     int     `json:"Seller"`
+	ConditionRecord            int     `json:"ConditionRecord"`
+	ConditionSequentialNumber  int     `json:"ConditionSequentialNumber"`
+	ConditionType              string  `json:"ConditionType"`
+	PricingDate                string  `json:"PricingDate"`
+	ConditionRateValue         float32 `json:"ConditionRateValue"`
+	ConditionRateValueUnit     int     `json:"ConditionRateValueUnit"`
+	ConditionScaleQuantity     int     `json:"ConditionScaleQuantity"`
+	ConditionCurrency          string  `json:"ConditionCurrency"`
+	ConditionQuantity          float32 `json:"ConditionQuantity"`
+	TaxCode                    *string `json:"TaxCode"`
+	ConditionAmount            float32 `json:"ConditionAmount"`
+	TransactionCurrency        string  `json:"TransactionCurrency"`
+	ConditionIsManuallyChanged *bool   `json:"ConditionIsManuallyChanged"`
+	CreationDate               string  `json:"CreationDate"`
+	CreationTime               string  `json:"CreationTime"`
+	LastChangeDate             string  `json:"LastChangeDate"`
+	LastChangeTime             string  `json:"LastChangeTime"`
+	IsCancelled                *bool   `json:"IsCancelled"`
+	IsMarkedForDeletion        *bool   `json:"IsMarkedForDeletion"`
 }
 
 type OrdersItemScheduleLine struct {
 	OrderID                                         int      `json:"OrderID"`
 	OrderItem                                       int      `json:"OrderItem"`
 	ScheduleLine                                    int      `json:"ScheduleLine"`
-	SupplyChainRelationshipID                       *int     `json:"SupplyChainRelationshipID"`
-	SupplyChainRelationshipStockConfPlantID         *int     `json:"SupplyChainRelationshipStockConfPlantID"`
-	Product                                         *string  `json:"Product"`
-	StockConfirmationBussinessPartner               *int     `json:"StockConfirmationBussinessPartner"`
-	StockConfirmationPlant                          *string  `json:"StockConfirmationPlant"`
+	SupplyChainRelationshipID                       int      `json:"SupplyChainRelationshipID"`
+	SupplyChainRelationshipStockConfPlantID         int      `json:"SupplyChainRelationshipStockConfPlantID"`
+	Product                                         string   `json:"Product"`
+	StockConfirmationBussinessPartner               int      `json:"StockConfirmationBussinessPartner"`
+	StockConfirmationPlant                          string   `json:"StockConfirmationPlant"`
 	StockConfirmationPlantTimeZone                  *string  `json:"StockConfirmationPlantTimeZone"`
 	StockConfirmationPlantBatch                     *string  `json:"StockConfirmationPlantBatch"`
 	StockConfirmationPlantBatchValidityStartDate    *string  `json:"StockConfirmationPlantBatchValidityStartDate"`
 	StockConfirmationPlantBatchValidityEndDate      *string  `json:"StockConfirmationPlantBatchValidityEndDate"`
-	RequestedDeliveryDate                           *string  `json:"RequestedDeliveryDate"`
-	RequestedDeliveryTime                           *string  `json:"RequestedDeliveryTime"`
+	RequestedDeliveryDate                           string   `json:"RequestedDeliveryDate"`
+	RequestedDeliveryTime                           string   `json:"RequestedDeliveryTime"`
 	ConfirmedDeliveryDate                           *string  `json:"ConfirmedDeliveryDate"`
 	ConfirmedDeliveryTime                           *string  `json:"ConfirmedDeliveryDate"`
-	ScheduleLineOrderQuantityInBaseUnit             *float32 `json:"ScheduleLineOrderQuantityInBaseUnit"`
-	OriginalOrderQuantityInBaseUnit                 *float32 `json:"OriginalOrderQuantityInBaseUnit"`
+	ScheduleLineOrderQuantityInBaseUnit             float32  `json:"ScheduleLineOrderQuantityInBaseUnit"`
+	OriginalOrderQuantityInBaseUnit                 float32  `json:"OriginalOrderQuantityInBaseUnit"`
 	ConfirmedOrderQuantityByPDTAvailCheckInBaseUnit *float32 `json:"ConfirmedOrderQuantityByPDTAvailCheckInBaseUnit"`
 	DeliveredQuantityInBaseUnit                     *float32 `json:"DeliveredQuantityInBaseUnit"`
 	UndeliveredQuantityInBaseUnit                   *float32 `json:"UndeliveredQuantityInBaseUnit"`
@@ -295,10 +301,10 @@ type OrdersItemScheduleLine struct {
 	ExternalReferenceDocument                       *string  `json:"ExternalReferenceDocument"`
 	ExternalReferenceDocumentItem                   *string  `json:"ExternalReferenceDocumentItem"`
 	ExternalReferenceDocumentItemScheduleLine       *string  `json:"ExternalReferenceDocumentItemScheduleLine"`
-	CreationDate                                    *string  `json:"CreationDate"`
-	CreationTime                                    *string  `json:"CreationTime"`
-	LastChangeDate                                  *string  `json:"LastChangeDate"`
-	LastChangeTime                                  *string  `json:"LastChangeTime"`
+	CreationDate                                    string   `json:"CreationDate"`
+	CreationTime                                    string   `json:"CreationTime"`
+	LastChangeDate                                  string   `json:"LastChangeDate"`
+	LastChangeTime                                  string   `json:"LastChangeTime"`
 	IsCancelled                                     *bool    `json:"IsCancelled"`
 	IsMarkedForDeletion                             *bool    `json:"IsMarkedForDeletion"`
 }
@@ -315,6 +321,7 @@ type OrdersPartner struct {
 	Currency                *string `json:"Currency"`
 	ExternalDocumentID      *string `json:"ExternalDocumentID"`
 	AddressID               *int    `json:"AddressID"`
+	EmailAddress            *string `json:"EmailAddress"`
 }
 
 type OrdersAddress struct {

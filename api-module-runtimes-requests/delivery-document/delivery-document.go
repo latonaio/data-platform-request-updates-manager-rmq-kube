@@ -10,9 +10,15 @@ import (
 )
 
 type DeliveryDocumentReq struct {
-	Header   Header   `json:"DeliveryDocument"`
-	APIType  string   `json:"api_type"`
-	Accepter []string `json:"accepter"`
+	InputParameters InputParameters `json:"InputParameters"`
+	Header          Header          `json:"DeliveryDocument"`
+	APIType         string          `json:"api_type"`
+	Accepter        []string        `json:"accepter"`
+}
+
+type InputParameters struct {
+	ReferenceDocument     *int `json:"ReferenceDocument"`
+	ReferenceDocumentItem *int `json:"ReferenceDocumentItem"`
 }
 
 type Header struct {
@@ -46,6 +52,8 @@ type Header struct {
 	OrderItem                              *int       `json:"OrderItem"`
 	Contract                               *int       `json:"Contract"`
 	ContractItem                           *int       `json:"ContractItem"`
+	Project                                *int       `json:"Project"`
+	WBSElement                             *int       `json:"WBSElement"`
 	ProductionVersion                      *int       `json:"ProductionVersion"`
 	ProductionVersionItem                  *int       `json:"ProductionVersionItem"`
 	ProductionOrder                        *int       `json:"ProductionOrder"`
@@ -341,6 +349,141 @@ func CreateDeliveryDocumentUpdatesRequestItemUpdates(
 	return req
 }
 
+func CreateDeliveryDocumentCreatesRequestReferOrdersCreates(
+	requestPram *apiInputReader.Request,
+	input DeliveryDocumentReq,
+) DeliveryDocumentReq {
+	req := DeliveryDocumentReq{
+		InputParameters: InputParameters{
+			ReferenceDocument: input.InputParameters.ReferenceDocument,
+		},
+		Header:   Header{},
+		APIType:  "creates",
+		Accepter: []string{},
+	}
+	return req
+}
+
+func CreateDeliveryDocumentRequestItem(
+	requestPram *apiInputReader.Request,
+	input DeliveryDocumentReq,
+) DeliveryDocumentReq {
+	var deliveryDocumentItem *int
+
+	dataDeliveryDocumentItem := (*input.Header.Item)[0].DeliveryDocumentItem
+	if &dataDeliveryDocumentItem != nil {
+		deliveryDocumentItem = &dataDeliveryDocumentItem
+	}
+
+	itemCompleteDeliveryIsDefined := false
+	itemDeliveryBlockStatus := false
+	isCancelled := false
+	isMarkedForDeletion := false
+
+	req := DeliveryDocumentReq{
+		Header: Header{
+			DeliveryDocument: input.Header.DeliveryDocument,
+			Item: &[]Item{
+				{
+					DeliveryDocumentItem:          *deliveryDocumentItem,
+					ItemCompleteDeliveryIsDefined: &itemCompleteDeliveryIsDefined,
+					ItemDeliveryBlockStatus:       &itemDeliveryBlockStatus,
+					IsCancelled:                   &isCancelled,
+					IsMarkedForDeletion:           &isMarkedForDeletion,
+				},
+			},
+		},
+		Accepter: []string{
+			"Item",
+		},
+	}
+	return req
+}
+
+func DeliveryDocumentRequestFunctionReferFromOrders(
+	requestPram *apiInputReader.Request,
+	deliveryDocumentHeader apiInputReader.DeliveryDocumentSDC,
+	controller *beego.Controller,
+) []byte {
+	aPIServiceName := "DPFM_API_DELIVERY_DOCUMENT_SRV"
+	aPIType := "creates"
+
+	var request DeliveryDocumentReq
+
+	request = CreateDeliveryDocumentCreatesRequestReferOrdersCreates(
+		requestPram,
+		DeliveryDocumentReq{
+			InputParameters: InputParameters{
+				ReferenceDocument: deliveryDocumentHeader.InputParameters.ReferenceDocument,
+			},
+		},
+	)
+
+	marshaledRequest, err := json.Marshal(request)
+	if err != nil {
+		services.HandleError(
+			controller,
+			err,
+			nil,
+		)
+	}
+
+	responseBody := services.Request(
+		aPIServiceName,
+		aPIType,
+		ioutil.NopCloser(strings.NewReader(string(marshaledRequest))),
+		controller,
+	)
+
+	return responseBody
+}
+
+func DeliveryDocumentReads(
+	requestPram *apiInputReader.Request,
+	input apiInputReader.DeliveryDocumentSDC,
+	controller *beego.Controller,
+	accepter string,
+) []byte {
+	aPIServiceName := "DPFM_API_DELIVERY_DOCUMENT_SRV"
+	aPIType := "reads"
+
+	var request DeliveryDocumentReq
+
+	if accepter == "Item" {
+		request = CreateDeliveryDocumentRequestItem(
+			requestPram,
+			DeliveryDocumentReq{
+				Header: Header{
+					DeliveryDocument: (input.Header.Item)[0].DeliveryDocument,
+					Item: &[]Item{
+						{
+							DeliveryDocumentItem: (input.Header.Item)[0].DeliveryDocumentItem,
+						},
+					},
+				},
+			},
+		)
+	}
+
+	marshaledRequest, err := json.Marshal(request)
+	if err != nil {
+		services.HandleError(
+			controller,
+			err,
+			nil,
+		)
+	}
+
+	responseBody := services.Request(
+		aPIServiceName,
+		aPIType,
+		ioutil.NopCloser(strings.NewReader(string(marshaledRequest))),
+		controller,
+	)
+
+	return responseBody
+}
+
 func DeliveryDocumentRequestItemUpdates(
 	requestPram *apiInputReader.Request,
 	deliveryDocumentHeader apiInputReader.DeliveryDocumentSDC,
@@ -354,14 +497,22 @@ func DeliveryDocumentRequestItemUpdates(
 	var items []Item
 
 	items = append(items, Item{
-		DeliveryDocument:               (deliveryDocumentHeader.Header.Item)[0].DeliveryDocument,
-		DeliveryDocumentItem:           (deliveryDocumentHeader.Header.Item)[0].DeliveryDocumentItem,
-		PlannedGoodsIssueDate:          (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsIssueDate,
-		PlannedGoodsIssueTime:          (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsIssueTime,
-		PlannedGoodsReceiptDate:        (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsReceiptDate,
-		PlannedGoodsReceiptTime:        (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsReceiptTime,
-		PlannedGoodsIssueQuantity:      (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsIssueQuantity,
-		PlannedGoodsIssueQtyInBaseUnit: (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsIssueQtyInBaseUnit,
+		DeliveryDocument:                (deliveryDocumentHeader.Header.Item)[0].DeliveryDocument,
+		DeliveryDocumentItem:            (deliveryDocumentHeader.Header.Item)[0].DeliveryDocumentItem,
+		PlannedGoodsIssueDate:           (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsIssueDate,
+		PlannedGoodsIssueTime:           (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsIssueTime,
+		PlannedGoodsReceiptDate:         (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsReceiptDate,
+		PlannedGoodsReceiptTime:         (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsReceiptTime,
+		PlannedGoodsIssueQuantity:       (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsIssueQuantity,
+		PlannedGoodsIssueQtyInBaseUnit:  (deliveryDocumentHeader.Header.Item)[0].PlannedGoodsIssueQtyInBaseUnit,
+		ActualGoodsIssueDate:            (deliveryDocumentHeader.Header.Item)[0].ActualGoodsIssueDate,
+		ActualGoodsIssueTime:            (deliveryDocumentHeader.Header.Item)[0].ActualGoodsIssueTime,
+		ActualGoodsIssueQuantity:        (deliveryDocumentHeader.Header.Item)[0].ActualGoodsIssueQuantity,
+		ActualGoodsIssueQtyInBaseUnit:   (deliveryDocumentHeader.Header.Item)[0].ActualGoodsIssueQtyInBaseUnit,
+		ActualGoodsReceiptDate:          (deliveryDocumentHeader.Header.Item)[0].ActualGoodsReceiptDate,
+		ActualGoodsReceiptTime:          (deliveryDocumentHeader.Header.Item)[0].ActualGoodsReceiptTime,
+		ActualGoodsReceiptQuantity:      (deliveryDocumentHeader.Header.Item)[0].ActualGoodsReceiptQuantity,
+		ActualGoodsReceiptQtyInBaseUnit: (deliveryDocumentHeader.Header.Item)[0].ActualGoodsReceiptQtyInBaseUnit,
 	})
 
 	request = CreateDeliveryDocumentUpdatesRequestItemUpdates(

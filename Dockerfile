@@ -12,7 +12,8 @@ RUN go build -o data-platform-request-updates-manager-rmq-kube ./
 
 # Runtime Container
 FROM alpine:3.14
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat tzdata
+
 ENV SERVICE=data-platform-request-updates-manager-rmq-kube \
     APP_DIR="${AION_HOME}/${POSITION}/${SERVICE}"
 

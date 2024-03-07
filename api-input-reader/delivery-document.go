@@ -24,6 +24,8 @@ type DeliveryDocumentSDC struct {
 }
 
 type DeliveryDocumentInputParameters struct {
+	ReferenceDocument         *int       `json:"ReferenceDocument"`
+	ReferenceDocumentItem     *int       `json:"ReferenceDocumentItem"`
 	DeliverToParty            *[]*int    `json:"DeliverToParty"`
 	DeliverToPartyTo          *int       `json:"DeliverToPartyTo"`
 	DeliverToPartyFrom        *int       `json:"DeliverToPartyFrom"`
@@ -72,6 +74,8 @@ type DeliveryDocumentHeader struct {
 	OrderItem                              *int                      `json:"OrderItem"`
 	Contract                               *int                      `json:"Contract"`
 	ContractItem                           *int                      `json:"ContractItem"`
+	Project                                *int                      `json:"Project"`
+	WBSElement                             *int                      `json:"WBSElement"`
 	ProductionVersion                      *int                      `json:"ProductionVersion"`
 	ProductionVersionItem                  *int                      `json:"ProductionVersionItem"`
 	ProductionOrder                        *int                      `json:"ProductionOrder"`

@@ -10,21 +10,27 @@ import (
 )
 
 type OrdersReq struct {
-	Header   Header   `json:"Orders"`
-	APIType  string   `json:"api_type"`
-	Accepter []string `json:"accepter"`
+	InputParameters InputParameters `json:"InputParameters"`
+	Header          Header          `json:"Orders"`
+	APIType         string          `json:"api_type"`
+	Accepter        []string        `json:"accepter"`
+}
+
+type InputParameters struct {
+	ReferenceDocument     *int `json:"ReferenceDocument"`
+	ReferenceDocumentItem *int `json:"ReferenceDocumentItem"`
 }
 
 type Header struct {
 	OrderID                          int       `json:"OrderID"`
-	OrderDate                        string    `json:"OrderDate"`
-	OrderType                        string    `json:"OrderType"`
-	OrderStatus                      string    `json:"OrderStatus"`
-	SupplyChainRelationshipID        int       `json:"SupplyChainRelationshipID"`
+	OrderDate                        *string   `json:"OrderDate"`
+	OrderType                        *string   `json:"OrderType"`
+	OrderStatus                      *string   `json:"OrderStatus"`
+	SupplyChainRelationshipID        *int      `json:"SupplyChainRelationshipID"`
 	SupplyChainRelationshipBillingID *int      `json:"SupplyChainRelationshipBillingID"`
 	SupplyChainRelationshipPaymentID *int      `json:"SupplyChainRelationshipPaymentID"`
-	Buyer                            int       `json:"Buyer"`
-	Seller                           int       `json:"Seller"`
+	Buyer                            *int      `json:"Buyer"`
+	Seller                           *int      `json:"Seller"`
 	BillToParty                      *int      `json:"BillToParty"`
 	BillFromParty                    *int      `json:"BillFromParty"`
 	BillToCountry                    *string   `json:"BillToCountry"`
@@ -36,21 +42,21 @@ type Header struct {
 	OrderValidityEndDate             *string   `json:"OrderValidityEndDate"`
 	InvoicePeriodStartDate           *string   `json:"InvoicePeriodStartDate"`
 	InvoicePeriodEndDate             *string   `json:"InvoicePeriodEndDate"`
-	TotalNetAmount                   float32   `json:"TotalNetAmount"`
-	TotalTaxAmount                   float32   `json:"TotalTaxAmount"`
-	TotalGrossAmount                 float32   `json:"TotalGrossAmount"`
-	HeaderDeliveryStatus             string    `json:"HeaderDeliveryStatus"`
-	HeaderBillingStatus              string    `json:"HeaderBillingStatus"`
-	HeaderDocReferenceStatus         string    `json:"HeaderDocReferenceStatus"`
-	TransactionCurrency              string    `json:"TransactionCurrency"`
-	PricingDate                      string    `json:"PricingDate"`
+	TotalNetAmount                   *float32  `json:"TotalNetAmount"`
+	TotalTaxAmount                   *float32  `json:"TotalTaxAmount"`
+	TotalGrossAmount                 *float32  `json:"TotalGrossAmount"`
+	HeaderDeliveryStatus             *string   `json:"HeaderDeliveryStatus"`
+	HeaderBillingStatus              *string   `json:"HeaderBillingStatus"`
+	HeaderDocReferenceStatus         *string   `json:"HeaderDocReferenceStatus"`
+	TransactionCurrency              *string   `json:"TransactionCurrency"`
+	PricingDate                      *string   `json:"PricingDate"`
 	PriceDetnExchangeRate            *float32  `json:"PriceDetnExchangeRate"`
-	RequestedDeliveryDate            string    `json:"RequestedDeliveryDate"`
-	RequestedDeliveryTime            string    `json:"RequestedDeliveryTime"`
+	RequestedDeliveryDate            *string   `json:"RequestedDeliveryDate"`
+	RequestedDeliveryTime            *string   `json:"RequestedDeliveryTime"`
 	HeaderCompleteDeliveryIsDefined  *bool     `json:"HeaderCompleteDeliveryIsDefined"`
 	Incoterms                        *string   `json:"Incoterms"`
-	PaymentTerms                     string    `json:"PaymentTerms"`
-	PaymentMethod                    string    `json:"PaymentMethod"`
+	PaymentTerms                     *string   `json:"PaymentTerms"`
+	PaymentMethod                    *string   `json:"PaymentMethod"`
 	Contract                         *int      `json:"Contract"`
 	ContractItem                     *int      `json:"ContractItem"`
 	ProductionVersion                *int      `json:"ProductionVersion"`
@@ -62,9 +68,9 @@ type Header struct {
 	OperationID                      *int      `json:"OperationID"`
 	ReferenceDocument                *int      `json:"ReferenceDocument"`
 	ReferenceDocumentItem            *int      `json:"ReferenceDocumentItem"`
-	AccountAssignmentGroup           string    `json:"AccountAssignmentGroup"`
+	AccountAssignmentGroup           *string   `json:"AccountAssignmentGroup"`
 	AccountingExchangeRate           *float32  `json:"AccountingExchangeRate"`
-	InvoiceDocumentDate              string    `json:"InvoiceDocumentDate"`
+	InvoiceDocumentDate              *string   `json:"InvoiceDocumentDate"`
 	IsExportImport                   *bool     `json:"IsExportImport"`
 	HeaderText                       *string   `json:"HeaderText"`
 	HeaderBlockStatus                *bool     `json:"HeaderBlockStatus"`
@@ -73,10 +79,10 @@ type Header struct {
 	ExternalReferenceDocument        *string   `json:"ExternalReferenceDocument"`
 	CertificateAuthorityChain        *string   `json:"CertificateAuthorityChain"`
 	UsageControlChain                *string   `json:"UsageControlChain"`
-	CreationDate                     string    `json:"CreationDate"`
-	CreationTime                     string    `json:"CreationTime"`
-	LastChangeDate                   string    `json:"LastChangeDate"`
-	LastChangeTime                   string    `json:"LastChangeTime"`
+	CreationDate                     *string   `json:"CreationDate"`
+	CreationTime                     *string   `json:"CreationTime"`
+	LastChangeDate                   *string   `json:"LastChangeDate"`
+	LastChangeTime                   *string   `json:"LastChangeTime"`
 	IsCancelled                      *bool     `json:"IsCancelled"`
 	IsMarkedForDeletion              *bool     `json:"IsMarkedForDeletion"`
 	Item                             []Item    `json:"Item"`
@@ -308,6 +314,7 @@ type Partner struct {
 	Currency                *string `json:"Currency"`
 	ExternalDocumentID      *string `json:"ExternalDocumentID"`
 	AddressID               *int    `json:"AddressID"`
+	EmailAddress            *string `json:"EmailAddress"`
 }
 
 type Address struct {
@@ -378,6 +385,59 @@ func CreateOrdersUpdatesRequestItemUpdates(
 		},
 	}
 	return req
+}
+
+func CreateOrdersCreatesRequestReferQuotationCreates(
+	requestPram *apiInputReader.Request,
+	input OrdersReq,
+) OrdersReq {
+	req := OrdersReq{
+		InputParameters: InputParameters{
+			ReferenceDocument: input.InputParameters.ReferenceDocument,
+		},
+		Header:   Header{},
+		APIType:  "creates",
+		Accepter: []string{},
+	}
+	return req
+}
+
+func OrdersRequestFunctionReferFromQuotations(
+	requestPram *apiInputReader.Request,
+	ordersHeader apiInputReader.OrdersSDC,
+	controller *beego.Controller,
+) []byte {
+	aPIServiceName := "DPFM_API_ORDERS_SRV"
+	aPIType := "creates"
+
+	var request OrdersReq
+
+	request = CreateOrdersCreatesRequestReferQuotationCreates(
+		requestPram,
+		OrdersReq{
+			InputParameters: InputParameters{
+				ReferenceDocument: ordersHeader.InputParameters.ReferenceDocument,
+			},
+		},
+	)
+
+	marshaledRequest, err := json.Marshal(request)
+	if err != nil {
+		services.HandleError(
+			controller,
+			err,
+			nil,
+		)
+	}
+
+	responseBody := services.Request(
+		aPIServiceName,
+		aPIType,
+		ioutil.NopCloser(strings.NewReader(string(marshaledRequest))),
+		controller,
+	)
+
+	return responseBody
 }
 
 func OrdersRequestItemUpdates(

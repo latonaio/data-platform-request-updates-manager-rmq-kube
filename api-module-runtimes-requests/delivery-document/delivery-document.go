@@ -1,7 +1,7 @@
 package apiModuleRuntimesRequestsDeliveryDocuement
 
 import (
-	apiInputReader "data-platform-request-updates-manager-rmq-kube/api-input-reader"
+	"data-platform-request-updates-manager-rmq-kube/api-input-reader/types"
 	"data-platform-request-updates-manager-rmq-kube/services"
 	"encoding/json"
 	"github.com/astaxie/beego"
@@ -336,7 +336,7 @@ type ItemPicking struct {
 }
 
 func CreateDeliveryDocumentUpdatesRequestItemUpdates(
-	requestPram *apiInputReader.Request,
+	requestPram *types.Request,
 	input DeliveryDocumentReq,
 ) DeliveryDocumentReq {
 	req := DeliveryDocumentReq{
@@ -350,7 +350,7 @@ func CreateDeliveryDocumentUpdatesRequestItemUpdates(
 }
 
 func CreateDeliveryDocumentCreatesRequestReferOrdersCreates(
-	requestPram *apiInputReader.Request,
+	requestPram *types.Request,
 	input DeliveryDocumentReq,
 ) DeliveryDocumentReq {
 	req := DeliveryDocumentReq{
@@ -365,7 +365,7 @@ func CreateDeliveryDocumentCreatesRequestReferOrdersCreates(
 }
 
 func CreateDeliveryDocumentRequestItem(
-	requestPram *apiInputReader.Request,
+	requestPram *types.Request,
 	input DeliveryDocumentReq,
 ) DeliveryDocumentReq {
 	var deliveryDocumentItem *int
@@ -401,8 +401,8 @@ func CreateDeliveryDocumentRequestItem(
 }
 
 func DeliveryDocumentRequestFunctionReferFromOrders(
-	requestPram *apiInputReader.Request,
-	deliveryDocumentHeader apiInputReader.DeliveryDocumentSDC,
+	requestPram *types.Request,
+	deliveryDocumentHeader types.DeliveryDocumentSDC,
 	controller *beego.Controller,
 ) []byte {
 	aPIServiceName := "DPFM_API_DELIVERY_DOCUMENT_SRV"
@@ -439,8 +439,8 @@ func DeliveryDocumentRequestFunctionReferFromOrders(
 }
 
 func DeliveryDocumentReads(
-	requestPram *apiInputReader.Request,
-	input apiInputReader.DeliveryDocumentSDC,
+	requestPram *types.Request,
+	input types.DeliveryDocumentSDC,
 	controller *beego.Controller,
 	accepter string,
 ) []byte {
@@ -485,8 +485,8 @@ func DeliveryDocumentReads(
 }
 
 func DeliveryDocumentRequestItemUpdates(
-	requestPram *apiInputReader.Request,
-	deliveryDocumentHeader apiInputReader.DeliveryDocumentSDC,
+	requestPram *types.Request,
+	deliveryDocumentHeader types.DeliveryDocumentSDC,
 	controller *beego.Controller,
 ) []byte {
 	aPIServiceName := "DPFM_API_DELIVERY_DOCUMENT_SRV"

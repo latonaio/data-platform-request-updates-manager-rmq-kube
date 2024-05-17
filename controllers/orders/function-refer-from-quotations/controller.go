@@ -1,7 +1,7 @@
 package controllersOrdersFunctionReferFromQuotations
 
 import (
-	apiInputReader "data-platform-request-updates-manager-rmq-kube/api-input-reader"
+	"data-platform-request-updates-manager-rmq-kube/api-input-reader/types"
 	apiModuleRuntimesRequestsOrders "data-platform-request-updates-manager-rmq-kube/api-module-runtimes-requests/orders"
 	apiOutputFormatter "data-platform-request-updates-manager-rmq-kube/api-output-formatter"
 	"data-platform-request-updates-manager-rmq-kube/services"
@@ -13,20 +13,20 @@ import (
 type OrdersFunctionReferFromQuotationsController struct {
 	beego.Controller
 	RedisKey     string
-	UserInfo     *apiInputReader.Request
+	UserInfo     *types.Request
 	CustomLogger *logger.Logger
 }
 
 func (controller *OrdersFunctionReferFromQuotationsController) Post() {
-	inputParameter := apiInputReader.OrdersInputRead(&controller.Controller)
+	inputParameter := types.OrdersInputRead(&controller.Controller)
 	controller.request(inputParameter)
 }
 
 func (
 	controller *OrdersFunctionReferFromQuotationsController,
 ) OrdersRequestFunctionReferFromQuotations(
-	requestPram *apiInputReader.Request,
-	input apiInputReader.OrdersSDC,
+	requestPram *types.Request,
+	input types.OrdersSDC,
 ) *apiOutputFormatter.OrdersSDC {
 	responseJsonData := apiOutputFormatter.OrdersSDC{}
 	responseBody := apiModuleRuntimesRequestsOrders.OrdersRequestFunctionReferFromQuotations(
@@ -51,7 +51,7 @@ func (
 func (
 	controller *OrdersFunctionReferFromQuotationsController,
 ) request(
-	input apiInputReader.OrdersSDC,
+	input types.OrdersSDC,
 ) {
 	var response *apiOutputFormatter.OrdersSDC
 

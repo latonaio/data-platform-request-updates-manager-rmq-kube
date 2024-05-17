@@ -2,7 +2,7 @@ package services
 
 import (
 	"bytes"
-	apiInputReader "data-platform-request-updates-manager-rmq-kube/api-input-reader"
+	apiInputReader "data-platform-request-updates-manager-rmq-kube/api-input-reader/types"
 	"data-platform-request-updates-manager-rmq-kube/config"
 	"encoding/json"
 	"fmt"
@@ -223,6 +223,12 @@ func HandleError(
 
 	controller.Data["json"] = responseData
 	controller.ServeJSON()
+
+	if statusCode != nil {
+		controller.Abort(fmt.Sprintf("%d", &statusCode))
+	} else {
+		controller.Abort("500")
+	}
 }
 
 func Respond(

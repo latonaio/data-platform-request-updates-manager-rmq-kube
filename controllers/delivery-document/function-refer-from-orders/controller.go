@@ -1,7 +1,7 @@
 package controllersDeliveryDocumentFunctionReferFromOrders
 
 import (
-	apiInputReader "data-platform-request-updates-manager-rmq-kube/api-input-reader"
+	"data-platform-request-updates-manager-rmq-kube/api-input-reader/types"
 	apiModuleRuntimesRequestsDeliveryDocument "data-platform-request-updates-manager-rmq-kube/api-module-runtimes-requests/delivery-document"
 	apiOutputFormatter "data-platform-request-updates-manager-rmq-kube/api-output-formatter"
 	"data-platform-request-updates-manager-rmq-kube/services"
@@ -13,20 +13,20 @@ import (
 type DeliveryDocumentFunctionReferFromOrdersController struct {
 	beego.Controller
 	RedisKey     string
-	UserInfo     *apiInputReader.Request
+	UserInfo     *types.Request
 	CustomLogger *logger.Logger
 }
 
 func (controller *DeliveryDocumentFunctionReferFromOrdersController) Post() {
-	inputParameter := apiInputReader.DeliveryDocumentInputRead(&controller.Controller)
+	inputParameter := types.DeliveryDocumentInputRead(&controller.Controller)
 	controller.request(inputParameter)
 }
 
 func (
 	controller *DeliveryDocumentFunctionReferFromOrdersController,
 ) DeliveryDocumentFunctionReferFromOrders(
-	requestPram *apiInputReader.Request,
-	input apiInputReader.DeliveryDocumentSDC,
+	requestPram *types.Request,
+	input types.DeliveryDocumentSDC,
 ) *apiOutputFormatter.DeliveryDocumentSDC {
 	responseJsonData := apiOutputFormatter.DeliveryDocumentSDC{}
 	responseBody := apiModuleRuntimesRequestsDeliveryDocument.DeliveryDocumentRequestFunctionReferFromOrders(
@@ -51,7 +51,7 @@ func (
 func (
 	controller *DeliveryDocumentFunctionReferFromOrdersController,
 ) request(
-	input apiInputReader.DeliveryDocumentSDC,
+	input types.DeliveryDocumentSDC,
 ) {
 	var response *apiOutputFormatter.DeliveryDocumentSDC
 

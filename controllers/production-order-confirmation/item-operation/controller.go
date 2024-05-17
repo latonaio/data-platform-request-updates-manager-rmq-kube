@@ -1,7 +1,7 @@
 package controllersProductionOrderConfirmationItemOperation
 
 import (
-	apiInputReader "data-platform-request-updates-manager-rmq-kube/api-input-reader"
+	"data-platform-request-updates-manager-rmq-kube/api-input-reader/types"
 	apiModuleRuntimesRequestsProductionOrderConfirmation "data-platform-request-updates-manager-rmq-kube/api-module-runtimes-requests/production-order-confirmation"
 	apiOutputFormatter "data-platform-request-updates-manager-rmq-kube/api-output-formatter"
 	"data-platform-request-updates-manager-rmq-kube/services"
@@ -13,22 +13,22 @@ import (
 type ProductionOrderConfirmationItemOperationController struct {
 	beego.Controller
 	RedisKey     string
-	UserInfo     *apiInputReader.Request
+	UserInfo     *types.Request
 	CustomLogger *logger.Logger
 }
 
 const ()
 
 func (controller *ProductionOrderConfirmationItemOperationController) Post() {
-	inputParameter := apiInputReader.ProductionOrderConfirmationInputRead(&controller.Controller)
+	inputParameter := types.ProductionOrderConfirmationInputRead(&controller.Controller)
 	controller.request(inputParameter)
 }
 
 func (
 	controller *ProductionOrderConfirmationItemOperationController,
 ) ProductionOrderConfirmationRequestHeaderUpdates(
-	requestPram *apiInputReader.Request,
-	input apiInputReader.ProductionOrderConfirmationSDC,
+	requestPram *types.Request,
+	input types.ProductionOrderConfirmationSDC,
 ) *apiOutputFormatter.ProductionOrderConfirmationSDC {
 	responseJsonData := apiOutputFormatter.ProductionOrderConfirmationSDC{}
 	responseBody := apiModuleRuntimesRequestsProductionOrderConfirmation.ProductionOrderConfirmationRequestHeaderUpdates(
@@ -53,7 +53,7 @@ func (
 func (
 	controller *ProductionOrderConfirmationItemOperationController,
 ) request(
-	input apiInputReader.ProductionOrderConfirmationSDC,
+	input types.ProductionOrderConfirmationSDC,
 ) {
 	var bRes *apiOutputFormatter.ProductionOrderConfirmationSDC
 

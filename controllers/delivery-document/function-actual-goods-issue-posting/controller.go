@@ -1,7 +1,7 @@
 package controllersDeliveryDocumentFunctionActualGoodsIssuePosting
 
 import (
-	apiInputReader "data-platform-request-updates-manager-rmq-kube/api-input-reader"
+	"data-platform-request-updates-manager-rmq-kube/api-input-reader/types"
 	apiModuleRuntimesRequestsDeliveryDocuement "data-platform-request-updates-manager-rmq-kube/api-module-runtimes-requests/delivery-document"
 	apiModuleRuntimesResponsesDeliveryDocument "data-platform-request-updates-manager-rmq-kube/api-module-runtimes-responses/delivery-document"
 	apiOutputFormatter "data-platform-request-updates-manager-rmq-kube/api-output-formatter"
@@ -15,20 +15,20 @@ import (
 type DeliveryDocumentFunctionActualGoodsIssuePostingController struct {
 	beego.Controller
 	RedisKey     string
-	UserInfo     *apiInputReader.Request
+	UserInfo     *types.Request
 	CustomLogger *logger.Logger
 }
 
 func (controller *DeliveryDocumentFunctionActualGoodsIssuePostingController) Post() {
-	inputParameter := apiInputReader.DeliveryDocumentInputRead(&controller.Controller)
+	inputParameter := types.DeliveryDocumentInputRead(&controller.Controller)
 	controller.request(inputParameter)
 }
 
 func (
 	controller *DeliveryDocumentFunctionActualGoodsIssuePostingController,
 ) createDeliveryDocumentRequestItem(
-	requestPram *apiInputReader.Request,
-	input apiInputReader.DeliveryDocumentSDC,
+	requestPram *types.Request,
+	input types.DeliveryDocumentSDC,
 ) *apiModuleRuntimesResponsesDeliveryDocument.DeliveryDocumentRes {
 	responseJsonData := apiModuleRuntimesResponsesDeliveryDocument.DeliveryDocumentRes{}
 	responseBody := apiModuleRuntimesRequestsDeliveryDocuement.DeliveryDocumentReads(
@@ -54,8 +54,8 @@ func (
 func (
 	controller *DeliveryDocumentFunctionActualGoodsIssuePostingController,
 ) DeliveryDocumentRequestItemUpdates(
-	requestPram *apiInputReader.Request,
-	input apiInputReader.DeliveryDocumentSDC,
+	requestPram *types.Request,
+	input types.DeliveryDocumentSDC,
 ) *apiOutputFormatter.DeliveryDocumentSDC {
 	responseJsonData := apiOutputFormatter.DeliveryDocumentSDC{}
 	responseBody := apiModuleRuntimesRequestsDeliveryDocuement.DeliveryDocumentRequestItemUpdates(
@@ -80,7 +80,7 @@ func (
 func (
 	controller *DeliveryDocumentFunctionActualGoodsIssuePostingController,
 ) request(
-	input apiInputReader.DeliveryDocumentSDC,
+	input types.DeliveryDocumentSDC,
 ) {
 	var response *apiOutputFormatter.DeliveryDocumentSDC
 

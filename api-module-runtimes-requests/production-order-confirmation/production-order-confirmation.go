@@ -1,7 +1,7 @@
 package apiModuleRuntimesRequestsProductionOrderConfirmation
 
 import (
-	apiInputReader "data-platform-request-updates-manager-rmq-kube/api-input-reader"
+	"data-platform-request-updates-manager-rmq-kube/api-input-reader/types"
 	"data-platform-request-updates-manager-rmq-kube/services"
 	"encoding/json"
 	"github.com/astaxie/beego"
@@ -64,7 +64,7 @@ type Header struct {
 }
 
 func CreateProductionOrderConfirmationUpdatesRequestHeaderUpdates(
-	requestPram *apiInputReader.Request,
+	requestPram *types.Request,
 	input ProductionOrderConfirmationReq,
 ) ProductionOrderConfirmationReq {
 	req := ProductionOrderConfirmationReq{
@@ -78,8 +78,8 @@ func CreateProductionOrderConfirmationUpdatesRequestHeaderUpdates(
 }
 
 func ProductionOrderConfirmationRequestHeaderUpdates(
-	requestPram *apiInputReader.Request,
-	productionOrderConfirmationHeader apiInputReader.ProductionOrderConfirmationSDC,
+	requestPram *types.Request,
+	productionOrderConfirmationHeader types.ProductionOrderConfirmationSDC,
 	controller *beego.Controller,
 ) []byte {
 	aPIServiceName := "DPFM_API_PRODUCTION_ORDER_CONFIRMATION_SRV"

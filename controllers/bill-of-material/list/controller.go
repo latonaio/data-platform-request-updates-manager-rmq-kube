@@ -1,7 +1,7 @@
 package controllersBillOfMaterialList
 
 import (
-	apiInputReader "data-platform-request-updates-manager-rmq-kube/api-input-reader"
+	"data-platform-request-updates-manager-rmq-kube/api-input-reader/types"
 	apiModuleRuntimesRequestsBillOfMaterial "data-platform-request-updates-manager-rmq-kube/api-module-runtimes-requests/bill-of-material"
 	apiOutputFormatter "data-platform-request-updates-manager-rmq-kube/api-output-formatter"
 	"data-platform-request-updates-manager-rmq-kube/services"
@@ -13,7 +13,7 @@ import (
 type BillOfMaterialListController struct {
 	beego.Controller
 	RedisKey     string
-	UserInfo     *apiInputReader.Request
+	UserInfo     *types.Request
 	CustomLogger *logger.Logger
 }
 
@@ -22,7 +22,7 @@ const (
 )
 
 func (controller *BillOfMaterialListController) Post() {
-	billOfMaterial := apiInputReader.BillOfMaterialInputRead(&controller.Controller)
+	billOfMaterial := types.BillOfMaterialInputRead(&controller.Controller)
 
 	billOfMaterialHeader := billOfMaterial
 
@@ -32,8 +32,8 @@ func (controller *BillOfMaterialListController) Post() {
 func (
 	controller *BillOfMaterialListController,
 ) BillOfMaterialRequestUpdates(
-	requestPram *apiInputReader.Request,
-	input apiInputReader.BillOfMaterialSDC,
+	requestPram *types.Request,
+	input types.BillOfMaterialSDC,
 ) *apiOutputFormatter.BillOfMaterialSDC {
 	responseJsonData := apiOutputFormatter.BillOfMaterialSDC{}
 	responseBody := apiModuleRuntimesRequestsBillOfMaterial.BillOfMaterialRequestHeaderUpdates(
@@ -58,7 +58,7 @@ func (
 func (
 	controller *BillOfMaterialListController,
 ) request(
-	input apiInputReader.BillOfMaterialSDC,
+	input types.BillOfMaterialSDC,
 ) {
 	var bRes *apiOutputFormatter.BillOfMaterialSDC
 

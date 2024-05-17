@@ -1,7 +1,7 @@
 package apiModuleRuntimesRequestsBillOfMaterial
 
 import (
-	apiInputReader "data-platform-request-updates-manager-rmq-kube/api-input-reader"
+	"data-platform-request-updates-manager-rmq-kube/api-input-reader/types"
 	"data-platform-request-updates-manager-rmq-kube/services"
 	"encoding/json"
 	"io/ioutil"
@@ -40,7 +40,7 @@ type Item struct {
 }
 
 func CreateBillOfMaterialUpdatesRequestHeaderUpdates(
-	requestPram *apiInputReader.Request,
+	requestPram *types.Request,
 	input BillOfMaterialReq,
 ) BillOfMaterialReq {
 	req := BillOfMaterialReq{
@@ -54,7 +54,7 @@ func CreateBillOfMaterialUpdatesRequestHeaderUpdates(
 }
 
 func CreateBillOfMaterialUpdatesRequestItemUpdates(
-	requestPram *apiInputReader.Request,
+	requestPram *types.Request,
 	input BillOfMaterialReq,
 ) BillOfMaterialReq {
 	req := BillOfMaterialReq{
@@ -68,8 +68,8 @@ func CreateBillOfMaterialUpdatesRequestItemUpdates(
 }
 
 func BillOfMaterialRequestHeaderUpdates(
-	requestPram *apiInputReader.Request,
-	billOfMaterialHeader apiInputReader.BillOfMaterialSDC,
+	requestPram *types.Request,
+	billOfMaterialHeader types.BillOfMaterialSDC,
 	controller *beego.Controller,
 ) []byte {
 	aPIServiceName := "DPFM_API_BILL_OF_MATERIAL_SRV"
@@ -112,8 +112,8 @@ func BillOfMaterialRequestHeaderUpdates(
 }
 
 func BillOfMaterialRequestItemUpdates(
-	requestPram *apiInputReader.Request,
-	billOfMaterialHeader apiInputReader.BillOfMaterialSDC,
+	requestPram *types.Request,
+	billOfMaterialHeader types.BillOfMaterialSDC,
 	controller *beego.Controller,
 ) []byte {
 	aPIServiceName := "DPFM_API_BILL_OF_MATERIAL_SRV"

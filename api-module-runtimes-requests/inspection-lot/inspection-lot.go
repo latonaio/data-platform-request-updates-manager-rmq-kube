@@ -1,7 +1,7 @@
 package apiModuleRuntimesRequestsInspectionLot
 
 import (
-	apiInputReader "data-platform-request-updates-manager-rmq-kube/api-input-reader"
+	"data-platform-request-updates-manager-rmq-kube/api-input-reader/types"
 	"data-platform-request-updates-manager-rmq-kube/services"
 	"encoding/json"
 	"io/ioutil"
@@ -43,7 +43,7 @@ type Inspection struct {
 }
 
 func CreateInspectionLotUpdatesRequestHeaderUpdates(
-	requestPram *apiInputReader.Request,
+	requestPram *types.Request,
 	input InspectionLotReq,
 ) InspectionLotReq {
 	req := InspectionLotReq{
@@ -57,7 +57,7 @@ func CreateInspectionLotUpdatesRequestHeaderUpdates(
 }
 
 func CreateInspectionLotUpdatesRequestInspectionUpdates(
-	requestPram *apiInputReader.Request,
+	requestPram *types.Request,
 	input InspectionLotReq,
 ) InspectionLotReq {
 	req := InspectionLotReq{
@@ -71,8 +71,8 @@ func CreateInspectionLotUpdatesRequestInspectionUpdates(
 }
 
 func InspectionLotRequestHeaderUpdates(
-	requestPram *apiInputReader.Request,
-	inspectionLotHeader apiInputReader.InspectionLotSDC,
+	requestPram *types.Request,
+	inspectionLotHeader types.InspectionLotSDC,
 	controller *beego.Controller,
 ) []byte {
 	aPIServiceName := "DPFM_API_INSPECTION_LOT_SRV"
@@ -118,8 +118,8 @@ func InspectionLotRequestHeaderUpdates(
 }
 
 func InspectionLotRequestInspectionUpdates(
-	requestPram *apiInputReader.Request,
-	inspectionLotHeader apiInputReader.InspectionLotSDC,
+	requestPram *types.Request,
+	inspectionLotHeader types.InspectionLotSDC,
 	controller *beego.Controller,
 ) []byte {
 	aPIServiceName := "DPFM_API_INSPECTION_LOT_SRV"

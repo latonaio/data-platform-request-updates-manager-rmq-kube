@@ -1,7 +1,7 @@
 package apiModuleRuntimesRequestsOrders
 
 import (
-	apiInputReader "data-platform-request-updates-manager-rmq-kube/api-input-reader"
+	"data-platform-request-updates-manager-rmq-kube/api-input-reader/types"
 	"data-platform-request-updates-manager-rmq-kube/services"
 	"encoding/json"
 	"github.com/astaxie/beego"
@@ -332,7 +332,7 @@ type Address struct {
 }
 
 func CreateOrdersUpdatesRequestHeaderCreates(
-	requestPram *apiInputReader.Request,
+	requestPram *types.Request,
 	input OrdersReq,
 ) OrdersReq {
 	req := OrdersReq{
@@ -346,7 +346,7 @@ func CreateOrdersUpdatesRequestHeaderCreates(
 }
 
 func CreateOrdersUpdatesRequestHeaderUpdates(
-	requestPram *apiInputReader.Request,
+	requestPram *types.Request,
 	input OrdersReq,
 ) OrdersReq {
 	req := OrdersReq{
@@ -360,7 +360,7 @@ func CreateOrdersUpdatesRequestHeaderUpdates(
 }
 
 func CreateOrdersUpdatesRequestItemCreates(
-	requestPram *apiInputReader.Request,
+	requestPram *types.Request,
 	input OrdersReq,
 ) OrdersReq {
 	req := OrdersReq{
@@ -374,7 +374,7 @@ func CreateOrdersUpdatesRequestItemCreates(
 }
 
 func CreateOrdersUpdatesRequestItemUpdates(
-	requestPram *apiInputReader.Request,
+	requestPram *types.Request,
 	input OrdersReq,
 ) OrdersReq {
 	req := OrdersReq{
@@ -388,7 +388,7 @@ func CreateOrdersUpdatesRequestItemUpdates(
 }
 
 func CreateOrdersCreatesRequestReferQuotationCreates(
-	requestPram *apiInputReader.Request,
+	requestPram *types.Request,
 	input OrdersReq,
 ) OrdersReq {
 	req := OrdersReq{
@@ -403,8 +403,8 @@ func CreateOrdersCreatesRequestReferQuotationCreates(
 }
 
 func OrdersRequestFunctionReferFromQuotations(
-	requestPram *apiInputReader.Request,
-	ordersHeader apiInputReader.OrdersSDC,
+	requestPram *types.Request,
+	ordersHeader types.OrdersSDC,
 	controller *beego.Controller,
 ) []byte {
 	aPIServiceName := "DPFM_API_ORDERS_SRV"
@@ -441,8 +441,8 @@ func OrdersRequestFunctionReferFromQuotations(
 }
 
 func OrdersRequestItemUpdates(
-	requestPram *apiInputReader.Request,
-	ordersHeader apiInputReader.OrdersSDC,
+	requestPram *types.Request,
+	ordersHeader types.OrdersSDC,
 	controller *beego.Controller,
 ) []byte {
 	aPIServiceName := "DPFM_API_ORDERS_SRV"

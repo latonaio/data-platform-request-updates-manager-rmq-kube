@@ -16,7 +16,7 @@ type PointTransactionSDC struct {
 	BusinessPartner  *int                   `json:"business_partner"`
 	ServiceLabel     string                 `json:"service_label"`
 	APIType          string                 `json:"api_type"`
-	HeaderFromEvent  PointTransactionHeader `json:"PointTransaction"`
+	Header           PointTransactionHeader `json:"PointTransaction"`
 	APISchema        string                 `json:"api_schema"`
 	Accepter         []string               `json:"accepter"`
 	Deleted          bool                   `json:"deleted"`
@@ -27,8 +27,10 @@ type PointTransactionHeader struct {
 	PointTransactionType                  string  `json:"PointTransactionType"`
 	PointTransactionDate                  string  `json:"PointTransactionDate"`
 	PointTransactionTime                  string  `json:"PointTransactionTime"`
-	Sender                                int     `json:"Sender"`
-	Receiver                              int     `json:"Receiver"`
+	SenderObjectType                      string  `json:"SenderObjectType"`
+	SenderObject                          int     `json:"SenderObject"`
+	ReceiverObjectType                    string  `json:"ReceiverObjectType"`
+	ReceiverObject                        int     `json:"ReceiverObject"`
 	PointSymbol                           string  `json:"PointSymbol"`
 	PlusMinus                             string  `json:"PlusMinus"`
 	PointTransactionAmount                float32 `json:"PointTransactionAmount"`
@@ -38,15 +40,22 @@ type PointTransactionHeader struct {
 	SenderPointBalanceAfterTransaction    float32 `json:"SenderPointBalanceAfterTransaction"`
 	ReceiverPointBalanceBeforeTransaction float32 `json:"ReceiverPointBalanceBeforeTransaction"`
 	ReceiverPointBalanceAfterTransaction  float32 `json:"ReceiverPointBalanceAfterTransaction"`
-	Attendance							  *int	  `json:"Attendance"`
-	Participation						  *int	  `json:"Participation"`
+	Attendance                            *int    `json:"Attendance"`
+	Participation                         *int    `json:"Participation"`
+	Invitation                            *int    `json:"Invitation"`
+	ValidityStartDate                     string  `json:"ValidityStartDate"`
+	ValidityEndDate                       string  `json:"ValidityEndDate"`
 	CreationDate                          string  `json:"CreationDate"`
 	CreationTime                          string  `json:"CreationTime"`
 	IsCancelled                           *bool   `json:"IsCancelled"`
 	BusinessPartner                       int     `json:"BusinessPartner"`
 	Event                                 *int    `json:"Event"`
 	EventOwner                            *int    `json:"EventOwner"`
+	Shop                                  *int    `json:"Shop"`
+	ShopOwner                             *int    `json:"ShopOwner"`
 	PointConditionRateValue               float32 `json:"PointConditionRateValue"`
+	SenderCurrentBalance                  float32 `json:"SenderCurrentBalance"`
+	ReceiverCurrentBalance                float32 `json:"ReceiverCurrentBalance"`
 }
 
 func PointTransactionInputRead(

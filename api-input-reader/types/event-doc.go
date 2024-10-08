@@ -16,6 +16,7 @@ type EventDocSDC struct {
 	BusinessPartnerID   *int     `json:"business_partner"`
 	ServiceLabel        string   `json:"service_label"`
 	Event               EventDoc `json:"Event"`
+	EventQRCode         EventDoc `json:"QRCode"`
 	APISchema           string   `json:"api_schema"`
 	Accepter            []string `json:"accepter"`
 	Deleted             bool     `json:"deleted"`

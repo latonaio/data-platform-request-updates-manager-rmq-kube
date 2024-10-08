@@ -13,23 +13,32 @@ type Event struct {
 	Participation			*[]Participation	  `json:"Participation"`
 	Attendance				*[]Attendance		  `json:"Attendance"`
 	PointTransaction   		*[]PointTransaction   `json:"PointTransaction"`
-	PointConditionElement   *[]PointConditionElement   `json:"PointConditionElement"`
+	PointConditionElement   *[]PointConditionElement	`json:"PointConditionElement"`
+	Counter					*[]Counter			  `json:"Counter"`
+	Like					*[]Like			  	  `json:"Like"`
 }
 
 type Header struct {
-	Event							int 	`json:"Event"`
+	Event							int		`json:"Event"`
 	EventType						string	`json:"EventType"`
 	EventOwner						int		`json:"EventOwner"`
 	EventOwnerBusinessPartnerRole	string	`json:"EventOwnerBusinessPartnerRole"`
 	PersonResponsible				string	`json:"PersonResponsible"`
+	URL								*string	`json:"URL"`
 	ValidityStartDate				string	`json:"ValidityStartDate"`
 	ValidityStartTime				string	`json:"ValidityStartTime"`
 	ValidityEndDate					string	`json:"ValidityEndDate"`
 	ValidityEndTime					string	`json:"ValidityEndTime"`
+	OperationStartDate				string	`json:"OperationStartDate"`
+	OperationStartTime				string	`json:"OperationStartTime"`
+	OperationEndDate				string	`json:"OperationEndDate"`
+	OperationEndTime				string	`json:"OperationEndTime"`
 	Description						string	`json:"Description"`
 	LongText						string	`json:"LongText"`
 	Introduction					*string	`json:"Introduction"`
 	Site							int		`json:"Site"`
+	Capacity						int		`json:"Capacity"`
+	Shop							*int	`json:"Shop"`
 	Project							*int	`json:"Project"`
 	WBSElement						*int	`json:"WBSElement"`
 	Tag1							*string	`json:"Tag1"`
@@ -166,4 +175,25 @@ type PointConditionElement struct {
 	IsReleased						*bool	`json:"IsReleased"`
 	IsCancelled						*bool	`json:"IsCancelled"`
 	IsMarkedForDeletion				*bool	`json:"IsMarkedForDeletion"`
+}
+
+type Counter struct {
+	Event					int		`json:"Event"`
+	NumberOfLikes			int		`json:"NumberOfLikes"`
+	NumberOfParticipations	int		`json:"NumberOfParticipations"`
+	NumberOfAttendances		int		`json:"NumberOfAttendances"`
+	CreationDate			string	`json:"CreationDate"`
+	CreationTime			string	`json:"CreationTime"`
+	LastChangeDate			string	`json:"LastChangeDate"`
+	LastChangeTime			string	`json:"LastChangeTime"`
+}
+
+type Like struct {
+	Event					int		`json:"Event"`
+	BusinessPartner			int		`json:"BusinessPartner"`
+	Like					*bool	`json:"Like"`
+	CreationDate			string	`json:"CreationDate"`
+	CreationTime			string	`json:"CreationTime"`
+	LastChangeDate			string	`json:"LastChangeDate"`
+	LastChangeTime			string	`json:"LastChangeTime"`
 }

@@ -30,6 +30,7 @@ type ParticipationHeader struct {
 	ParticipationObjectType		string	`json:"ParticipationObjectType"`
 	ParticipationObject			int		`json:"ParticipationObject"`
 	Attendance					*int	`json:"Attendance"`
+	Invitation					*int	`json:"Invitation"`
 	CreationDate				string	`json:"CreationDate"`
 	CreationTime				string	`json:"CreationTime"`
 	IsCancelled					*bool	`json:"IsCancelled"`

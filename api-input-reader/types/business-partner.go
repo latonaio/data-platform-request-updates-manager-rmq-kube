@@ -53,12 +53,16 @@ type BusinessPartnerGeneral struct {
 	BusinessPartnerIsBlocked               *bool                                    `json:"BusinessPartnerIsBlocked"`
 	CertificateAuthorityChain              *string                                  `json:"CertificateAuthorityChain"`
 	UsageControlChain                      *string                                  `json:"UsageControlChain"`
+	Withdrawal           		  		   *bool									`json:"Withdrawal"`
 	CreationDate                           string                                   `json:"CreationDate"`
 	LastChangeDate                         string                                   `json:"LastChangeDate"`
+	IsReleased           		  		   *bool									`json:"IsReleased"`
 	IsMarkedForDeletion                    *bool                                    `json:"IsMarkedForDeletion"`
 	BusinessPartnerRole                    []BusinessPartnerRole                    `json:"Role"`
 	BusinessPartnerPerson                  []BusinessPartnerPerson                  `json:"Person"`
 	BusinessPartnerAddress                 []BusinessPartnerAddress                 `json:"Address"`
+	BusinessPartnerSNS                     []BusinessPartnerSNS                     `json:"SNS"`
+	BusinessPartnerGPS                     []BusinessPartnerGPS                     `json:"GPS"`
 	BusinessPartnerRank                    []BusinessPartnerRank                    `json:"Rank"`
 	BusinessPartnerPersonMobilePhoneAuth   []BusinessPartnerPersonMobilePhoneAuth   `json:"PersonMobilePhoneAuth"`
 	BusinessPartnerPersonGoogleAccountAuth []BusinessPartnerPersonGoogleAccountAuth `json:"PersonGoogleAccountAuth"`
@@ -78,15 +82,15 @@ type BusinessPartnerRole struct {
 type BusinessPartnerPerson struct {
 	BusinessPartner        		int     `json:"BusinessPartner"`
 	BusinessPartnerType    		string  `json:"BusinessPartnerType"`
-	FirstName              		*string `json:"FirstName"`
-	LastName               		*string `json:"LastName"`
-	FullName               		*string `json:"FullName"`
+	FirstName              		string	`json:"FirstName"`
+	LastName               		string	`json:"LastName"`
+	FullName               		string	`json:"FullName"`
 	MiddleName             		*string `json:"MiddleName"`
 	NickName               		string  `json:"NickName"`
 	Gender                 		string  `json:"Gender"`
 	Language               		string  `json:"Language"`
 	CorrespondenceLanguage 		*string `json:"CorrespondenceLanguage"`
-	BirthDate              		*string `json:"BirthDate"`
+	BirthDate              		string	`json:"BirthDate"`
 	Nationality		            string  `json:"Nationality"`
 	EmailAddress           		*string `json:"EmailAddress"`
 	MobilePhoneNumber      		*string `json:"MobilePhoneNumber"`
@@ -95,6 +99,7 @@ type BusinessPartnerPerson struct {
 	PreferableLocalRegion		string  `json:"PreferableLocalRegion"`
 	PreferableCountry			string  `json:"PreferableCountry"`
 	ActPurpose					string  `json:"ActPurpose"`
+	TermsOfUseIsConfirmed		*bool   `json:"TermsOfUseIsConfirmed"`
 	CreationDate           		string  `json:"CreationDate"`
 	LastChangeDate         		string  `json:"LastChangeDate"`
 	IsMarkedForDeletion    		*bool   `json:"IsMarkedForDeletion"`
@@ -119,6 +124,34 @@ type BusinessPartnerAddress struct {
 	YCoordinate     *float32 `json:"YCoordinate"`
 	ZCoordinate     *float32 `json:"ZCoordinate"`
 	Site            *int     `json:"Site"`
+}
+
+type BusinessPartnerSNS struct {
+	BusinessPartner     int     `json:"BusinessPartner"`
+	BusinessPartnerType string  `json:"BusinessPartnerType"`
+	XURL                *string `json:"XURL"`
+	InstagramURL        *string `json:"InstagramURL"`
+	TikTokURL           *string `json:"TikTokURL"`
+	PointAppsURL        string	`json:"PointAppsURL"`
+	CreationDate        string  `json:"CreationDate"`
+	LastChangeDate      string  `json:"LastChangeDate"`
+	IsMarkedForDeletion *bool   `json:"IsMarkedForDeletion"`
+}
+
+type BusinessPartnerGPS struct {
+	BusinessPartner     int     `json:"BusinessPartner"`
+	BusinessPartnerType string  `json:"BusinessPartnerType"`
+	XCoordinate         float32 `json:"XCoordinate"`
+	YCoordinate         float32 `json:"YCoordinate"`
+	ZCoordinate         float32 `json:"ZCoordinate"`
+	LocalSubRegion      string  `json:"LocalSubRegion"`
+	LocalRegion         string  `json:"LocalRegion"`
+	Country             string  `json:"Country"`
+	CreationDate        string  `json:"CreationDate"`
+	CreationTime        string  `json:"CreationTime"`
+	LastChangeDate      string  `json:"LastChangeDate"`
+	LastChangeTime      string  `json:"LastChangeTime"`
+	IsMarkedForDeletion *bool   `json:"IsMarkedForDeletion"`
 }
 
 type BusinessPartnerRank struct {

@@ -36,6 +36,76 @@ type AuthenticatorUser struct {
 	LastChangeDate		string	`json:"LastChangeDate"`
 	LastChangeTime		string	`json:"LastChangeTime"`
 	IsMarkedForDeletion	*bool	`json:"IsMarkedForDeletion"`
+	AuthenticatorInitialEmailAuth			AuthenticatorInitialEmailAuth			`json:"InitialEmailAuth"`
+	AuthenticatorInitialSMSAuth				AuthenticatorInitialSMSAuth				`json:"InitialSMSAuth"`
+	AuthenticatorSMSAuth					AuthenticatorSMSAuth					`json:"SMSAuth"`
+	AuthenticatorInitialGoogleAccountAuth	AuthenticatorInitialGoogleAccountAuth	`json:"InitialGoogleAccountAuth"`
+	AuthenticatorGoogleAccountAuth			AuthenticatorGoogleAccountAuth			`json:"GoogleAccountAuth"`
+	AuthenticatorInstagramAuth				AuthenticatorInstagramAuth				`json:"InstagramAuth"`
+}
+
+type AuthenticatorInitialEmailAuth struct {
+	EmailAddress		string	`json:"EmailAddress"`
+	CreationDate		string	`json:"CreationDate"`
+	CreationTime		string	`json:"CreationTime"`
+	LastChangeDate		string	`json:"LastChangeDate"`
+	LastChangeTime		string	`json:"LastChangeTime"`
+	IsMarkedForDeletion	*bool	`json:"IsMarkedForDeletion"`
+}
+
+type AuthenticatorInitialSMSAuth struct {
+	MobilePhoneNumber	string	`json:"MobilePhoneNumber"`
+	AuthenticationCode	int		`json:"AuthenticationCode"`
+	CreationDate		string	`json:"CreationDate"`
+	CreationTime		string	`json:"CreationTime"`
+	LastChangeDate		string	`json:"LastChangeDate"`
+	LastChangeTime		string	`json:"LastChangeTime"`
+	IsMarkedForDeletion	*bool	`json:"IsMarkedForDeletion"`
+}
+
+type AuthenticatorSMSAuth struct {
+	UserID				string	`json:"UserID"`
+	MobilePhoneNumber	string	`json:"MobilePhoneNumber"`
+	AuthenticationCode	int		`json:"AuthenticationCode"`
+	CreationDate		string	`json:"CreationDate"`
+	CreationTime		string	`json:"CreationTime"`
+	LastChangeDate		string	`json:"LastChangeDate"`
+	LastChangeTime		string	`json:"LastChangeTime"`
+	IsMarkedForDeletion	*bool	`json:"IsMarkedForDeletion"`
+}
+
+type AuthenticatorInitialGoogleAccountAuth struct {
+	EmailAddress		string	`json:"EmailAddress"`
+	GoogleID			string	`json:"GoogleID"`
+	AccessToken			string	`json:"AccessToken"`
+	CreationDate		string	`json:"CreationDate"`
+	CreationTime		string	`json:"CreationTime"`
+	LastChangeDate		string	`json:"LastChangeDate"`
+	LastChangeTime		string	`json:"LastChangeTime"`
+	IsMarkedForDeletion	*bool	`json:"IsMarkedForDeletion"`
+}
+
+type AuthenticatorGoogleAccountAuth struct {
+	UserID				string	`json:"UserID"`
+	EmailAddress		string	`json:"EmailAddress"`
+	GoogleID			string	`json:"GoogleID"`
+	AccessToken			string	`json:"AccessToken"`
+	CreationDate		string	`json:"CreationDate"`
+	CreationTime		string	`json:"CreationTime"`
+	LastChangeDate		string	`json:"LastChangeDate"`
+	LastChangeTime		string	`json:"LastChangeTime"`
+	IsMarkedForDeletion	*bool	`json:"IsMarkedForDeletion"`
+}
+
+type AuthenticatorInstagramAuth struct {
+	UserID              string `json:"UserID"`
+	InstagramID         string `json:"InstagramID"`
+	AccessToken         string `json:"AccessToken"`
+	CreationDate        string `json:"CreationDate"`
+	CreationTime        string `json:"CreationTime"`
+	LastChangeDate      string `json:"LastChangeDate"`
+	LastChangeTime      string `json:"LastChangeTime"`
+	IsMarkedForDeletion *bool  `json:"IsMarkedForDeletion"`
 }
 
 func AuthenticatorInputRead(

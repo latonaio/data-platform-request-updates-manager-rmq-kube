@@ -54,6 +54,8 @@ type Header struct {
 	IsMarkedForDeletion          *bool     `json:"IsMarkedForDeletion"`
 	Partner                      []Partner `json:"Partner"`
 	Address                      []Address `json:"Address"`
+	Counter                      []Counter `json:"Counter"`
+	Like                         []Like    `json:"Like"`
 }
 
 type Partner struct {
@@ -91,6 +93,25 @@ type Address struct {
 	ZCoordinate    *float32 `json:"ZCoordinate"`
 }
 
+type Counter struct {
+	Site           int    `json:"Site"`
+	NumberOfLikes  int    `json:"NumberOfLikes"`
+	CreationDate   string `json:"CreationDate"`
+	CreationTime   string `json:"CreationTime"`
+	LastChangeDate string `json:"LastChangeDate"`
+	LastChangeTime string `json:"LastChangeTime"`
+}
+
+type Like struct {
+	Site            int    `json:"Site"`
+	BusinessPartner int    `json:"BusinessPartner"`
+	Like            *bool  `json:"Like"`
+	CreationDate    string `json:"CreationDate"`
+	CreationTime    string `json:"CreationTime"`
+	LastChangeDate  string `json:"LastChangeDate"`
+	LastChangeTime  string `json:"LastChangeTime"`
+}
+
 func FuncSiteCreatesRequestAll(
 	requestPram *types.Request,
 	input SiteReq,
@@ -100,7 +121,9 @@ func FuncSiteCreatesRequestAll(
 		APIType: "creates",
 		Accepter: []string{
 			"Header",
-			//"Address",
+			"Counter",
+			"Like",
+			"Address",
 		},
 	}
 	return req
@@ -123,7 +146,9 @@ func SiteCreatesRequestAll(
 	isReleased := false
 	isMarkedForDeletion := false
 
-	introduction := "Test Introduction"
+	//	introduction := "Test Introduction"
+
+	like := false
 
 	request = FuncSiteCreatesRequestAll(
 		requestPram,
@@ -144,7 +169,7 @@ func SiteCreatesRequestAll(
 				DailyOperationEndTime:        input.Header.DailyOperationEndTime,
 				Description:                  input.Header.Description,
 				LongText:                     input.Header.LongText,
-				Introduction:                 &introduction,
+				Introduction:                 &input.Header.LongText,
 				OperationRemarks:             input.Header.OperationRemarks,
 				PhoneNumber:                  input.Header.PhoneNumber,
 				AvailabilityOfParking:        input.Header.AvailabilityOfParking,
@@ -162,24 +187,43 @@ func SiteCreatesRequestAll(
 				LastChangeUser:               input.Header.LastChangeUser,
 				IsReleased:                   &isReleased,
 				IsMarkedForDeletion:          &isMarkedForDeletion,
-				//Address:	[]Address{
-				//	{
-				//		AddressID:			input.Header.SiteAddress[0].AddressID,
-				//		PostalCode:			input.Header.SiteAddress[0].PostalCode,
-				//		LocalSubRegion:		input.Header.SiteAddress[0].LocalSubRegion,
-				//		LocalRegion:		input.Header.SiteAddress[0].LocalRegion,
-				//		Country:			input.Header.SiteAddress[0].Country,
-				//		GlobalRegion:		input.Header.SiteAddress[0].GlobalRegion,
-				//		TimeZone:			input.Header.SiteAddress[0].TimeZone,
-				//		District:			input.Header.SiteAddress[0].District,
-				//		StreetName:			input.Header.SiteAddress[0].StreetName,
-				//		CityName:			input.Header.SiteAddress[0].CityName,
-				//		Building:			input.Header.SiteAddress[0].Building,
-				//		XCoordinate:		input.Header.SiteAddress[0].XCoordinate,
-				//		YCoordinate:		input.Header.SiteAddress[0].YCoordinate,
-				//		ZCoordinate:		input.Header.SiteAddress[0].ZCoordinate,
-				//	},
-				//},
+				Counter: []Counter{
+					{
+						NumberOfLikes:  0,
+						CreationDate:   formattedDate,
+						CreationTime:   formattedTime,
+						LastChangeDate: formattedDate,
+						LastChangeTime: formattedTime,
+					},
+				},
+				Like: []Like{
+					{
+						BusinessPartner: input.Header.SiteLike[0].BusinessPartner,
+						Like:            &like,
+						CreationDate:    formattedDate,
+						CreationTime:    formattedTime,
+						LastChangeDate:  formattedDate,
+						LastChangeTime:  formattedTime,
+					},
+				},
+				Address: []Address{
+					{
+						AddressID:      1,
+						PostalCode:     "999-9999",
+						LocalSubRegion: input.Header.SiteAddress[0].LocalSubRegion,
+						LocalRegion:    input.Header.SiteAddress[0].LocalRegion,
+						Country:        input.Header.SiteAddress[0].Country,
+						GlobalRegion:   "AS",
+						TimeZone:       "JST",
+						District:       input.Header.SiteAddress[0].District,
+						StreetName:     input.Header.SiteAddress[0].StreetName,
+						CityName:       input.Header.SiteAddress[0].CityName,
+						Building:       input.Header.SiteAddress[0].Building,
+						XCoordinate:    input.Header.SiteAddress[0].XCoordinate,
+						YCoordinate:    input.Header.SiteAddress[0].YCoordinate,
+						ZCoordinate:    input.Header.SiteAddress[0].ZCoordinate,
+					},
+				},
 			},
 		},
 	)
@@ -262,6 +306,133 @@ func SiteUpdatesRequestHeader(
 				LastChangeDate:               formattedDate,
 				LastChangeTime:               formattedTime,
 				LastChangeUser:               input.Header.LastChangeUser,
+			},
+		},
+	)
+
+	marshaledRequest, err := json.Marshal(request)
+	if err != nil {
+		services.HandleError(
+			controller,
+			err,
+			nil,
+		)
+	}
+
+	responseBody := services.Request(
+		aPIServiceName,
+		aPIType,
+		ioutil.NopCloser(strings.NewReader(string(marshaledRequest))),
+		controller,
+	)
+
+	return responseBody
+}
+
+func FuncSiteUpdatesRequestCounter(
+	requestPram *types.Request,
+	input SiteReq,
+) SiteReq {
+	req := SiteReq{
+		Header:  input.Header,
+		APIType: "updates",
+		Accepter: []string{
+			"Counter",
+		},
+	}
+	return req
+}
+
+func SiteUpdatesRequestCounter(
+	requestPram *types.Request,
+	input types.SiteSDC,
+	controller *beego.Controller,
+) []byte {
+	aPIServiceName := "DPFM_API_EVENT_SRV"
+	aPIType := "updates"
+
+	currentDateTime := time.Now()
+	formattedDate := currentDateTime.Format("2006-01-02")
+	formattedTime := currentDateTime.Format("15:04:05")
+
+	var request SiteReq
+
+	request = FuncSiteUpdatesRequestCounter(
+		requestPram,
+		SiteReq{
+			Header: Header{
+				Site: input.Header.Site,
+				Counter: []Counter{
+					{
+						NumberOfLikes:  input.Header.SiteCounter[0].NumberOfLikes,
+						LastChangeDate: formattedDate,
+						LastChangeTime: formattedTime,
+					},
+				},
+			},
+		},
+	)
+
+	marshaledRequest, err := json.Marshal(request)
+	if err != nil {
+		services.HandleError(
+			controller,
+			err,
+			nil,
+		)
+	}
+
+	responseBody := services.Request(
+		aPIServiceName,
+		aPIType,
+		ioutil.NopCloser(strings.NewReader(string(marshaledRequest))),
+		controller,
+	)
+
+	return responseBody
+}
+
+func FuncSiteUpdatesRequestLike(
+	requestPram *types.Request,
+	input SiteReq,
+) SiteReq {
+	req := SiteReq{
+		Header:  input.Header,
+		APIType: "updates",
+		Accepter: []string{
+			"Like",
+		},
+	}
+	return req
+}
+
+func SiteUpdatesRequestLike(
+	requestPram *types.Request,
+	input types.SiteSDC,
+	controller *beego.Controller,
+) []byte {
+	aPIServiceName := "DPFM_API_EVENT_SRV"
+	aPIType := "updates"
+
+	currentDateTime := time.Now()
+	formattedDate := currentDateTime.Format("2006-01-02")
+	formattedTime := currentDateTime.Format("15:04:05")
+
+	var request SiteReq
+
+	request = FuncSiteUpdatesRequestLike(
+		requestPram,
+		SiteReq{
+			Header: Header{
+				Site: input.Header.Site,
+				Like: []Like{
+					{
+						BusinessPartner: input.Header.SiteLike[0].BusinessPartner,
+						Like:            input.Header.SiteLike[0].Like,
+						LastChangeDate:  formattedDate,
+						LastChangeTime:  formattedTime,
+					},
+				},
 			},
 		},
 	)

@@ -22,8 +22,10 @@ type Header struct {
 	PointTransactionType                  string  `json:"PointTransactionType"`
 	PointTransactionDate                  string  `json:"PointTransactionDate"`
 	PointTransactionTime                  string  `json:"PointTransactionTime"`
-	Sender                                int     `json:"Sender"`
-	Receiver                              int     `json:"Receiver"`
+	SenderObjectType                      string  `json:"SenderObjectType"`
+	SenderObject                          int     `json:"SenderObject"`
+	ReceiverObjectType                    string  `json:"ReceiverObjectType"`
+	ReceiverObject                        int     `json:"ReceiverObject"`
 	PointSymbol                           string  `json:"PointSymbol"`
 	PlusMinus                             string  `json:"PlusMinus"`
 	PointTransactionAmount                float32 `json:"PointTransactionAmount"`
@@ -35,6 +37,9 @@ type Header struct {
 	ReceiverPointBalanceAfterTransaction  float32 `json:"ReceiverPointBalanceAfterTransaction"`
 	Attendance                            *int    `json:"Attendance"`
 	Participation                         *int    `json:"Participation"`
+	Invitation                            *int    `json:"Invitation"`
+	ValidityStartDate                     string  `json:"ValidityStartDate"`
+	ValidityEndDate                       string  `json:"ValidityEndDate"`
 	CreationDate                          string  `json:"CreationDate"`
 	CreationTime                          string  `json:"CreationTime"`
 	IsCancelled                           *bool   `json:"IsCancelled"`
@@ -70,8 +75,52 @@ func PointTransactionCreatesRequestHeader(
 
 	isCancelled := false
 
-	if inputSDC.Accepter[0] == "Event" {
-		input, err := formatter.ConvertToPointTransactionCreatesHeaderFromEvent(inputSDC)
+	switch inputSDC.Accepter[0] {
+	case "Event":
+		func() {
+			input, err := formatter.ConvertToPointTransactionCreatesHeaderFromEvent(inputSDC)
+			if err != nil {
+				services.HandleError(
+					controller,
+					err,
+					nil,
+				)
+			}
+			request = FuncPointTransactionCreatesRequestHeader(
+				requestPram,
+				PointTransactionReq{
+					Header: Header{
+						PointTransaction:                      nil,
+						PointTransactionType:                  "100",
+						PointTransactionDate:                  formattedDate,
+						PointTransactionTime:                  formattedTime,
+						SenderObjectType:                      "SHOP",
+						SenderObject:                          input.PointTransactionHeader.SenderObject,
+						ReceiverObjectType:                    "BUSINESS_PARTNER",
+						ReceiverObject:                        input.PointTransactionHeader.ReceiverObject,
+						PointSymbol:                           "POYPO",
+						PlusMinus:                             "+",
+						PointTransactionAmount:                input.PointTransactionHeader.PointTransactionAmount,
+						PointTransactionObjectType:            "EVENT",
+						PointTransactionObject:                input.PointTransactionHeader.PointTransactionObject,
+						SenderPointBalanceBeforeTransaction:   input.PointTransactionHeader.SenderPointBalanceBeforeTransaction,
+						SenderPointBalanceAfterTransaction:    input.PointTransactionHeader.SenderPointBalanceAfterTransaction,
+						ReceiverPointBalanceBeforeTransaction: input.PointTransactionHeader.ReceiverPointBalanceBeforeTransaction,
+						ReceiverPointBalanceAfterTransaction:  input.PointTransactionHeader.ReceiverPointBalanceAfterTransaction,
+						Attendance:                            nil,
+						Participation:                         nil,
+						Invitation:                            nil,
+						ValidityStartDate:                     formattedDate,
+						ValidityEndDate:                       "9999-12-31",
+						CreationDate:                          formattedDate,
+						CreationTime:                          formattedTime,
+						IsCancelled:                           &isCancelled,
+					},
+				},
+			)
+		}()
+	case "PointConsumption":
+		input, err := formatter.ConvertToPointTransactionCreatesHeaderFromPointConsumption(inputSDC)
 		if err != nil {
 			services.HandleError(
 				controller,
@@ -83,69 +132,128 @@ func PointTransactionCreatesRequestHeader(
 			requestPram,
 			PointTransactionReq{
 				Header: Header{
-					PointTransaction:       nil,
-					PointTransactionType:   input.Header.PointTransactionType,
-					PointTransactionDate:   formattedDate,
-					PointTransactionTime:   formattedTime,
-					Sender:                 input.Header.Sender,
-					Receiver:               input.Header.Receiver,
-					PointSymbol:            "POYPO",
-					PlusMinus:              input.Header.PlusMinus,
-					PointTransactionAmount: input.Header.PointTransactionAmount,
-					//PointTransactionAmount:     				3000,
-					PointTransactionObjectType: input.Header.PointTransactionObjectType,
-					PointTransactionObject:     input.Header.PointTransactionObject,
-					//SenderPointBalanceBeforeTransaction:  	input.Header.SenderPointBalanceBeforeTransaction,
-					SenderPointBalanceBeforeTransaction: 100000,
-					//SenderPointBalanceAfterTransaction:		input.Header.SenderPointBalanceAfterTransaction,
-					SenderPointBalanceAfterTransaction: 97000,
-					//ReceiverPointBalanceBeforeTransaction: 	input.Header.ReceiverPointBalanceBeforeTransaction,
-					ReceiverPointBalanceBeforeTransaction: 2000,
-					//ReceiverPointBalanceAfterTransaction:		input.Header.ReceiverPointBalanceAfterTransaction,
-					ReceiverPointBalanceAfterTransaction: 5000,
-					Attendance:                           input.Header.Attendance,
-					Participation:                        input.Header.Participation,
-					CreationDate:                         formattedDate,
-					CreationTime:                         formattedTime,
-					IsCancelled:                          &isCancelled,
+					PointTransaction:                      nil,
+					PointTransactionType:                  "200",
+					PointTransactionDate:                  formattedDate,
+					PointTransactionTime:                  formattedTime,
+					SenderObjectType:                      "BUSINESS_PARTNER",
+					SenderObject:                          input.PointTransactionHeader.SenderObject,
+					ReceiverObjectType:                    "SHOP",
+					ReceiverObject:                        input.PointTransactionHeader.ReceiverObject,
+					PointSymbol:                           "POYPO",
+					PlusMinus:                             "-",
+					PointTransactionAmount:                input.PointTransactionHeader.PointTransactionAmount,
+					PointTransactionObjectType:            "SHOP",
+					PointTransactionObject:                input.PointTransactionHeader.PointTransactionObject,
+					SenderPointBalanceBeforeTransaction:   input.PointTransactionHeader.SenderPointBalanceBeforeTransaction,
+					SenderPointBalanceAfterTransaction:    input.PointTransactionHeader.SenderPointBalanceAfterTransaction,
+					ReceiverPointBalanceBeforeTransaction: input.PointTransactionHeader.ReceiverPointBalanceBeforeTransaction,
+					ReceiverPointBalanceAfterTransaction:  input.PointTransactionHeader.ReceiverPointBalanceAfterTransaction,
+					Attendance:                            nil,
+					Participation:                         nil,
+					Invitation:                            nil,
+					ValidityStartDate:                     formattedDate,
+					ValidityEndDate:                       "9999-12-31",
+					CreationDate:                          formattedDate,
+					CreationTime:                          formattedTime,
+					IsCancelled:                           &isCancelled,
 				},
 			},
 		)
-	} else {
+	default:
 		input := inputSDC
 		request = FuncPointTransactionCreatesRequestHeader(
 			requestPram,
 			PointTransactionReq{
 				Header: Header{
-					PointTransaction:       nil,
-					PointTransactionType:   input.HeaderFromEvent.PointTransactionType,
-					PointTransactionDate:   formattedDate,
-					PointTransactionTime:   formattedTime,
-					Sender:                 input.HeaderFromEvent.Sender,
-					Receiver:               input.HeaderFromEvent.Receiver,
-					PointSymbol:            "POYPO",
-					PlusMinus:              input.HeaderFromEvent.PlusMinus,
-					PointTransactionAmount: input.HeaderFromEvent.PointTransactionAmount,
-					//PointTransactionAmount:     				3000,
-					PointTransactionObjectType: input.HeaderFromEvent.PointTransactionObjectType,
-					PointTransactionObject:     input.HeaderFromEvent.PointTransactionObject,
-					//SenderPointBalanceBeforeTransaction:		input.Header.SenderPointBalanceBeforeTransaction,
-					SenderPointBalanceBeforeTransaction: 100000,
-					//SenderPointBalanceAfterTransaction:		input.Header.SenderPointBalanceAfterTransaction,
-					SenderPointBalanceAfterTransaction: 97000,
-					//ReceiverPointBalanceBeforeTransaction:	input.Header.ReceiverPointBalanceBeforeTransaction,
-					ReceiverPointBalanceBeforeTransaction: 2000,
-					//ReceiverPointBalanceAfterTransaction:		input.Header.ReceiverPointBalanceAfterTransaction,
-					ReceiverPointBalanceAfterTransaction: 5000,
-					Attendance:                           input.HeaderFromEvent.Attendance,
-					Participation:                        input.HeaderFromEvent.Participation,
-					CreationDate:                         formattedDate,
-					CreationTime:                         formattedTime,
-					IsCancelled:                          &isCancelled,
+					PointTransaction:                      nil,
+					PointTransactionType:                  input.Header.PointTransactionType,
+					PointTransactionDate:                  formattedDate,
+					PointTransactionTime:                  formattedTime,
+					SenderObjectType:                      input.Header.SenderObjectType,
+					SenderObject:                          input.Header.SenderObject,
+					ReceiverObjectType:                    input.Header.ReceiverObjectType,
+					ReceiverObject:                        input.Header.ReceiverObject,
+					PointSymbol:                           "POYPO",
+					PlusMinus:                             input.Header.PlusMinus,
+					PointTransactionAmount:                input.Header.PointTransactionAmount,
+					PointTransactionObjectType:            input.Header.PointTransactionObjectType,
+					PointTransactionObject:                input.Header.PointTransactionObject,
+					SenderPointBalanceBeforeTransaction:   input.Header.SenderPointBalanceBeforeTransaction,
+					SenderPointBalanceAfterTransaction:    input.Header.SenderPointBalanceAfterTransaction,
+					ReceiverPointBalanceBeforeTransaction: input.Header.ReceiverPointBalanceBeforeTransaction,
+					ReceiverPointBalanceAfterTransaction:  input.Header.ReceiverPointBalanceAfterTransaction,
+					Attendance:                            nil,
+					Participation:                         nil,
+					Invitation:                            nil,
+					ValidityStartDate:                     formattedDate,
+					ValidityEndDate:                       "9999-12-31",
+					CreationDate:                          formattedDate,
+					CreationTime:                          formattedTime,
+					IsCancelled:                           &isCancelled,
 				},
 			},
 		)
 	}
+
+	marshaledRequest, err := json.Marshal(request)
+	if err != nil {
+		services.HandleError(
+			controller,
+			err,
+			nil,
+		)
+	}
+
+	responseBody := services.Request(
+		aPIServiceName,
+		aPIType,
+		ioutil.NopCloser(strings.NewReader(string(marshaledRequest))),
+		controller,
+	)
+
+	return responseBody
+}
+
+func FuncPointTransactionCancelsRequestHeader(
+	requestPram *types.Request,
+	input PointTransactionReq,
+) PointTransactionReq {
+	req := PointTransactionReq{
+		Header: input.Header,
+		APIType: "cancels",
+		Accepter: []string{
+			"Header",
+		},
+	}
+	return req
+}
+
+func PointTransactionCancelsRequestHeader(
+	requestPram *types.Request,
+	input types.PointTransactionSDC,
+	controller *beego.Controller,
+) []byte {
+	aPIServiceName := "DPFM_API_POINT_TRANSACTION_SRV"
+	aPIType := "cancels"
+
+//	currentDateTime := time.Now()
+//	formattedDate := currentDateTime.Format("2006-01-02")
+//	formattedTime := currentDateTime.Format("15:04:05")
+
+	var request PointTransactionReq
+
+	isCancelled := true
+
+	request = FuncPointTransactionCancelsRequestHeader(
+		requestPram,
+		PointTransactionReq{
+			Header: Header{
+				PointTransaction:			input.Header.PointTransaction,
+		        IsCancelled:				&isCancelled,
+			},
+		},
+	)
 
 	marshaledRequest, err := json.Marshal(request)
 	if err != nil {

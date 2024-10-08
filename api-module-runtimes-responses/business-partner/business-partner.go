@@ -9,6 +9,8 @@ type BusinessPartner struct {
 	Role                    *[]Role                    `json:"Role"`
 	Person                  *[]Person                  `json:"Person"`
 	Address                 *[]Address                 `json:"Address"`
+	SNS                     *[]SNS                     `json:"SNS"`
+	GPS                     *[]GPS                     `json:"GPS"`
 	Rank                    *[]Rank                    `json:"Rank"`
 	PersonMobilePhoneAuth   *[]PersonMobilePhoneAuth   `json:"PersonMobilePhoneAuth"`
 	PersonGoogleAccountAuth *[]PersonGoogleAccountAuth `json:"PersonGoogleAccountAuth"`
@@ -46,8 +48,10 @@ type General struct {
 	BusinessPartnerIsBlocked      *bool   `json:"BusinessPartnerIsBlocked"`
 	CertificateAuthorityChain     *string `json:"CertificateAuthorityChain"`
 	UsageControlChain             *string `json:"UsageControlChain"`
+	Withdrawal           		  *bool   `json:"Withdrawal"`
 	CreationDate                  string  `json:"CreationDate"`
 	LastChangeDate                string  `json:"LastChangeDate"`
+	IsReleased           		  *bool   `json:"IsReleased"`
 	IsMarkedForDeletion           *bool   `json:"IsMarkedForDeletion"`
 }
 
@@ -64,23 +68,24 @@ type Role struct {
 type Person struct {
 	BusinessPartner        		int     `json:"BusinessPartner"`
 	BusinessPartnerType    		string  `json:"BusinessPartnerType"`
-	FirstName              		*string `json:"FirstName"`
-	LastName               		*string `json:"LastName"`
-	FullName               		*string `json:"FullName"`
+	FirstName              		string	`json:"FirstName"`
+	LastName               		string	`json:"LastName"`
+	FullName               		string	`json:"FullName"`
 	MiddleName             		*string `json:"MiddleName"`
 	NickName               		string  `json:"NickName"`
 	Gender                 		string  `json:"Gender"`
 	Language               		string  `json:"Language"`
 	CorrespondenceLanguage 		*string `json:"CorrespondenceLanguage"`
-	BirthDate              		*string `json:"BirthDate"`
+	BirthDate              		string	`json:"BirthDate"`
 	Nationality		            string  `json:"Nationality"`
 	EmailAddress           		*string `json:"EmailAddress"`
 	MobilePhoneNumber      		*string `json:"MobilePhoneNumber"`
 	ProfileComment         		*string `json:"ProfileComment"`
-	PreferableLocalSubRegion	string `json:"PreferableLocalSubRegion"`
-	PreferableLocalRegion		string `json:"PreferableLocalRegion"`
-	PreferableCountry			string `json:"PreferableCountry"`
+	PreferableLocalSubRegion	string  `json:"PreferableLocalSubRegion"`
+	PreferableLocalRegion		string  `json:"PreferableLocalRegion"`
+	PreferableCountry			string  `json:"PreferableCountry"`
 	ActPurpose					string  `json:"ActPurpose"`
+	TermsOfUseIsConfirmed		*bool   `json:"TermsOfUseIsConfirmed"`
 	CreationDate           		string  `json:"CreationDate"`
 	LastChangeDate         		string  `json:"LastChangeDate"`
 	IsMarkedForDeletion    		*bool   `json:"IsMarkedForDeletion"`
@@ -116,6 +121,34 @@ type Rank struct {
 	CreationDate        string `json:"CreationDate"`
 	LastChangeDate      string `json:"LastChangeDate"`
 	IsMarkedForDeletion *bool  `json:"IsMarkedForDeletion"`
+}
+
+type SNS struct {
+	BusinessPartner     int     `json:"BusinessPartner"`
+	BusinessPartnerType string  `json:"BusinessPartnerType"`
+	XURL                *string `json:"XURL"`
+	InstagramURL        *string `json:"InstagramURL"`
+	TikTokURL           *string `json:"TikTokURL"`
+	PointAppsURL        string	`json:"PointAppsURL"`
+	CreationDate        string  `json:"CreationDate"`
+	LastChangeDate      string  `json:"LastChangeDate"`
+	IsMarkedForDeletion *bool   `json:"IsMarkedForDeletion"`
+}
+
+type GPS struct {
+	BusinessPartner     int     `json:"BusinessPartner"`
+	BusinessPartnerType string  `json:"BusinessPartnerType"`
+	XCoordinate         float32 `json:"XCoordinate"`
+	YCoordinate         float32 `json:"YCoordinate"`
+	ZCoordinate         float32 `json:"ZCoordinate"`
+	LocalSubRegion      string  `json:"LocalSubRegion"`
+	LocalRegion         string  `json:"LocalRegion"`
+	Country             string  `json:"Country"`
+	CreationDate        string  `json:"CreationDate"`
+	CreationTime        string  `json:"CreationTime"`
+	LastChangeDate      string  `json:"LastChangeDate"`
+	LastChangeTime      string  `json:"LastChangeTime"`
+	IsMarkedForDeletion *bool   `json:"IsMarkedForDeletion"`
 }
 
 type PersonMobilePhoneAuth struct {

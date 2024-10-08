@@ -23,8 +23,23 @@ type PointBalanceSDC struct {
 }
 
 type PointBalancePointBalance struct {
+	BusinessPartner						  int			`json:"BusinessPartner"`
+	PointSymbol							  string		`json:"PointSymbol"`
+	CurrentBalance						  *float32		`json:"CurrentBalance"`
+	LimitBalance						  *float32		`json:"LimitBalance"`
+	CreationDate						  string		`json:"CreationDate"`
+	CreationTime						  string		`json:"CreationTime"`
+	LastChangeDate						  string		`json:"LastChangeDate"`
+	LastChangeTime						  string		`json:"LastChangeTime"`
+    SenderPointBalanceAfterTransaction    float32       `json:"SenderPointBalanceAfterTransaction"`
+    ReceiverPointBalanceAfterTransaction  float32       `json:"ReceiverPointBalanceAfterTransaction"`
+	PointBalanceByShop					  []PointBalanceByShop `json:"ByShop"`
+}
+
+type PointBalanceByShop struct {
 	BusinessPartner		int			`json:"BusinessPartner"`
 	PointSymbol			string		`json:"PointSymbol"`
+	Shop				int			`json:"Shop"`
 	CurrentBalance		float32		`json:"CurrentBalance"`
 	LimitBalance		*float32	`json:"LimitBalance"`
 	CreationDate		string		`json:"CreationDate"`

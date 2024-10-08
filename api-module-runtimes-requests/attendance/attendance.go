@@ -11,22 +11,22 @@ import (
 )
 
 type AttendanceReq struct {
-	Header          Header          `json:"Attendance"`
-	APIType         string          `json:"api_type"`
-	Accepter        []string        `json:"accepter"`
+	Header   Header   `json:"Attendance"`
+	APIType  string   `json:"api_type"`
+	Accepter []string `json:"accepter"`
 }
 
 type Header struct {
-	Attendance				*int	`json:"Attendance"`
-	AttendanceDate			string	`json:"AttendanceDate"`
-	AttendanceTime			string	`json:"AttendanceTime"`
-	Attender				int		`json:"Attender"`
-	AttendanceObjectType	string	`json:"AttendanceObjectType"`
-	AttendanceObject		int		`json:"AttendanceObject"`
-	Participation			*int	`json:"Participation"`
-	CreationDate			string	`json:"CreationDate"`
-	CreationTime			string	`json:"CreationTime"`
-	IsCancelled				*bool	`json:"IsCancelled"`
+	Attendance           *int   `json:"Attendance"`
+	AttendanceDate       string `json:"AttendanceDate"`
+	AttendanceTime       string `json:"AttendanceTime"`
+	Attender             int    `json:"Attender"`
+	AttendanceObjectType string `json:"AttendanceObjectType"`
+	AttendanceObject     int    `json:"AttendanceObject"`
+	Participation        *int   `json:"Participation"`
+	CreationDate         string `json:"CreationDate"`
+	CreationTime         string `json:"CreationTime"`
+	IsCancelled          *bool  `json:"IsCancelled"`
 }
 
 func FuncAttendanceCreatesRequestAll(
@@ -34,7 +34,7 @@ func FuncAttendanceCreatesRequestAll(
 	input AttendanceReq,
 ) AttendanceReq {
 	req := AttendanceReq{
-		Header: input.Header,
+		Header:  input.Header,
 		APIType: "creates",
 		Accepter: []string{
 			"Header",
@@ -63,16 +63,75 @@ func AttendanceCreatesRequestAll(
 		requestPram,
 		AttendanceReq{
 			Header: Header{
-				Attendance:             nil,
-		        AttendanceDate:			formattedDate,
-		        AttendanceTime:			formattedTime,
-		        Attender:				input.Header.Attender,
-		        AttendanceObjectType:	input.Header.AttendanceObjectType,
-		        AttendanceObject:		input.Header.AttendanceObject,
-		        Participation:			input.Header.Participation,
-		        CreationDate:			formattedDate,
-		        CreationTime:			formattedTime,
-		        IsCancelled:			&isCancelled,
+				Attendance:           nil,
+				AttendanceDate:       formattedDate,
+				AttendanceTime:       formattedTime,
+				Attender:             input.Header.Attender,
+				AttendanceObjectType: "EVENT",
+				AttendanceObject:     input.Header.AttendanceObject,
+				Participation:        nil,
+				CreationDate:         formattedDate,
+				CreationTime:         formattedTime,
+				IsCancelled:          &isCancelled,
+			},
+		},
+	)
+
+	marshaledRequest, err := json.Marshal(request)
+	if err != nil {
+		services.HandleError(
+			controller,
+			err,
+			nil,
+		)
+	}
+
+	responseBody := services.Request(
+		aPIServiceName,
+		aPIType,
+		ioutil.NopCloser(strings.NewReader(string(marshaledRequest))),
+		controller,
+	)
+
+	return responseBody
+}
+
+func FuncAttendanceCancelsRequestAll(
+	requestPram *types.Request,
+	input AttendanceReq,
+) AttendanceReq {
+	req := AttendanceReq{
+		Header:  input.Header,
+		APIType: "cancels",
+		Accepter: []string{
+			"Header",
+		},
+	}
+	return req
+}
+
+func AttendanceCancelsRequestAll(
+	requestPram *types.Request,
+	input types.AttendanceSDC,
+	controller *beego.Controller,
+) []byte {
+	aPIServiceName := "DPFM_API_ATTENDANCE_SRV"
+	aPIType := "cancels"
+
+	//	currentDateTime := time.Now()
+	//	formattedDate := currentDateTime.Format("2006-01-02")
+	//	formattedTime := currentDateTime.Format("15:04:05")
+
+	var request AttendanceReq
+
+	isCancelled := true
+
+	request = FuncAttendanceCancelsRequestAll(
+		requestPram,
+		AttendanceReq{
+			Header: Header{
+				Attendance:  input.Header.Attendance,
+				IsCancelled: &isCancelled,
 			},
 		},
 	)

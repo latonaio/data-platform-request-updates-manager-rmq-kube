@@ -60,6 +60,8 @@ type SiteHeader struct {
 	IsMarkedForDeletion				*bool	`json:"IsMarkedForDeletion"`
 	SitePartner        				[]SitePartner `json:"Partner"`
 	SiteAddress        				[]SiteAddress `json:"Address"`
+	SiteCounter                  	[]SiteCounter `json:"Counter"`
+	SiteLike                     	[]SiteLike	  `json:"Like"`
 }
 
 type SitePartner struct {
@@ -95,6 +97,25 @@ type SiteAddress struct {
 	XCoordinate 	*float32	`json:"XCoordinate"`
 	YCoordinate 	*float32	`json:"YCoordinate"`
 	ZCoordinate 	*float32	`json:"ZCoordinate"`
+}
+
+type SiteCounter struct {
+	Site					int		`json:"Site"`
+	NumberOfLikes			int		`json:"NumberOfLikes"`
+	CreationDate			string	`json:"CreationDate"`
+	CreationTime			string	`json:"CreationTime"`
+	LastChangeDate			string	`json:"LastChangeDate"`
+	LastChangeTime			string	`json:"LastChangeTime"`
+}
+
+type SiteLike struct {
+	Site					int		`json:"Site"`
+	BusinessPartner			int		`json:"BusinessPartner"`
+	Like					*bool	`json:"Like"`
+	CreationDate			string	`json:"CreationDate"`
+	CreationTime			string	`json:"CreationTime"`
+	LastChangeDate			string	`json:"LastChangeDate"`
+	LastChangeTime			string	`json:"LastChangeTime"`
 }
 
 func SiteInputRead(

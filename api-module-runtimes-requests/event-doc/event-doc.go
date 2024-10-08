@@ -10,10 +10,11 @@ import (
 )
 
 type EventDocReq struct {
-	EventDoc EventDoc `json:"Event"`
-	APIType  string   `json:"api_type"`
-	Accepter []string `json:"accepter"`
-	DocData  string   `json:"doc_data"`
+	EventDoc    EventDoc `json:"Event"`
+	EventQRCode EventDoc `json:"QRCode"`
+	APIType     string   `json:"api_type"`
+	Accepter    []string `json:"accepter"`
+	DocData     string   `json:"doc_data"`
 }
 
 type EventDoc struct {
@@ -37,10 +38,11 @@ func FuncEventDocCreatesRequestHeaderDoc(
 	input EventDocReq,
 ) EventDocReq {
 	req := EventDocReq{
-		EventDoc: input.EventDoc,
-		APIType:  "creates",
-		Accepter: []string{},
-		DocData:  input.DocData,
+		EventDoc:    input.EventDoc,
+		EventQRCode: input.EventQRCode,
+		APIType:     "creates",
+		Accepter:    input.Accepter,
+		DocData:     input.DocData,
 	}
 	return req
 }
@@ -73,7 +75,8 @@ func EventDocCreatesRequestHeaderDoc(
 					DocIssuerBusinessPartner: 1001,
 				},
 			},
-			DocData: input.DocData,
+			DocData:  input.DocData,
+			Accepter: input.Accepter,
 		},
 	)
 

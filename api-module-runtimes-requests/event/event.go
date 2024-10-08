@@ -22,6 +22,7 @@ type Header struct {
 	EventOwner                    int                     `json:"EventOwner"`
 	EventOwnerBusinessPartnerRole string                  `json:"EventOwnerBusinessPartnerRole"`
 	PersonResponsible             string                  `json:"PersonResponsible"`
+	URL                           *string                 `json:"URL"`
 	ValidityStartDate             string                  `json:"ValidityStartDate"`
 	ValidityStartTime             string                  `json:"ValidityStartTime"`
 	ValidityEndDate               string                  `json:"ValidityEndDate"`
@@ -34,6 +35,8 @@ type Header struct {
 	LongText                      string                  `json:"LongText"`
 	Introduction                  *string                 `json:"Introduction"`
 	Site                          int                     `json:"Site"`
+	Capacity                      int                     `json:"Capacity"`
+	Shop                          *int                    `json:"Shop"`
 	Project                       *int                    `json:"Project"`
 	WBSElement                    *int                    `json:"WBSElement"`
 	Tag1                          *string                 `json:"Tag1"`
@@ -57,10 +60,12 @@ type Header struct {
 	Address                       []Address               `json:"Address"`
 	Campaign                      []Campaign              `json:"Campaign"`
 	Game                          []Game                  `json:"Game"`
-	Participation				  []Participation		  `json:"Participation"`
-	Attendance					  []Attendance			  `json:"Attendance"`
+	Participation                 []Participation         `json:"Participation"`
+	Attendance                    []Attendance            `json:"Attendance"`
 	PointTransaction              []PointTransaction      `json:"PointTransaction"`
 	PointConditionElement         []PointConditionElement `json:"PointConditionElement"`
+	Counter                       []Counter               `json:"Counter"`
+	Like                          []Like                  `json:"Like"`
 }
 
 type Partner struct {
@@ -120,26 +125,26 @@ type Game struct {
 }
 
 type Participation struct {
-	Event							int		`json:"Event"`
-	Participator					int		`json:"Participator"`
-	Participation					int		`json:"Participation"`
-	CreationDate					string	`json:"CreationDate"`
-	CreationTime					string	`json:"CreationTime"`
-	LastChangeDate					string	`json:"LastChangeDate"`
-	LastChangeTime					string	`json:"LastChangeTime"`
-	IsCancelled						*bool	`json:"IsCancelled"`
+	Event          int    `json:"Event"`
+	Participator   int    `json:"Participator"`
+	Participation  int    `json:"Participation"`
+	CreationDate   string `json:"CreationDate"`
+	CreationTime   string `json:"CreationTime"`
+	LastChangeDate string `json:"LastChangeDate"`
+	LastChangeTime string `json:"LastChangeTime"`
+	IsCancelled    *bool  `json:"IsCancelled"`
 }
 
 type Attendance struct {
-	Event							int		`json:"Event"`
-	Attender						int		`json:"Attender"`
-	Attendance						int		`json:"Attendance"`
-	Participation					int		`json:"Participation"`
-	CreationDate					string	`json:"CreationDate"`
-	CreationTime					string	`json:"CreationTime"`
-	LastChangeDate					string	`json:"LastChangeDate"`
-	LastChangeTime					string	`json:"LastChangeTime"`
-	IsCancelled						*bool	`json:"IsCancelled"`
+	Event          int    `json:"Event"`
+	Attender       int    `json:"Attender"`
+	Attendance     int    `json:"Attendance"`
+	Participation  int    `json:"Participation"`
+	CreationDate   string `json:"CreationDate"`
+	CreationTime   string `json:"CreationTime"`
+	LastChangeDate string `json:"LastChangeDate"`
+	LastChangeTime string `json:"LastChangeTime"`
+	IsCancelled    *bool  `json:"IsCancelled"`
 }
 
 type PointTransaction struct {
@@ -180,6 +185,27 @@ type PointConditionElement struct {
 	IsMarkedForDeletion            *bool   `json:"IsMarkedForDeletion"`
 }
 
+type Counter struct {
+	Event                  int    `json:"Event"`
+	NumberOfLikes          int    `json:"NumberOfLikes"`
+	NumberOfParticipations int    `json:"NumberOfParticipations"`
+	NumberOfAttendances    int    `json:"NumberOfAttendances"`
+	CreationDate           string `json:"CreationDate"`
+	CreationTime           string `json:"CreationTime"`
+	LastChangeDate         string `json:"LastChangeDate"`
+	LastChangeTime         string `json:"LastChangeTime"`
+}
+
+type Like struct {
+	Event           int    `json:"Event"`
+	BusinessPartner int    `json:"BusinessPartner"`
+	Like            *bool  `json:"Like"`
+	CreationDate    string `json:"CreationDate"`
+	CreationTime    string `json:"CreationTime"`
+	LastChangeDate  string `json:"LastChangeDate"`
+	LastChangeTime  string `json:"LastChangeTime"`
+}
+
 func FuncEventCreatesRequestAll(
 	requestPram *types.Request,
 	input EventReq,
@@ -190,6 +216,8 @@ func FuncEventCreatesRequestAll(
 		Accepter: []string{
 			"Header",
 			"Address",
+			"Counter",
+			"Like",
 			//			"PointConditionElement",
 		},
 	}
@@ -214,7 +242,11 @@ func EventCreatesRequestAll(
 	isCancelled := false
 	isMarkedForDeletion := false
 
-	introduction := "Test Introduction"
+	//	introduction := "Test Introduction"
+
+	like := false
+
+	shop := 1
 
 	request = FuncEventCreatesRequestAll(
 		requestPram,
@@ -225,6 +257,7 @@ func EventCreatesRequestAll(
 				EventOwner:                    input.Header.EventOwner,
 				EventOwnerBusinessPartnerRole: input.Header.EventOwnerBusinessPartnerRole,
 				PersonResponsible:             input.Header.PersonResponsible,
+				URL:                           input.Header.URL,
 				ValidityStartDate:             input.Header.ValidityStartDate,
 				ValidityStartTime:             input.Header.ValidityStartTime,
 				ValidityEndDate:               input.Header.ValidityEndDate,
@@ -235,8 +268,10 @@ func EventCreatesRequestAll(
 				OperationEndTime:              input.Header.OperationEndTime,
 				Description:                   input.Header.Description,
 				LongText:                      input.Header.LongText,
-				Introduction:                  &introduction,
-				Site:                          1,
+				Introduction:                  &input.Header.LongText,
+				Site:                          input.Header.Site,
+				Capacity:                      300,
+				Shop:                          &shop,
 				Tag1:                          input.Header.Tag1,
 				Tag2:                          input.Header.Tag2,
 				Tag3:                          input.Header.Tag3,
@@ -270,6 +305,27 @@ func EventCreatesRequestAll(
 						XCoordinate:    input.Header.EventAddress[0].XCoordinate,
 						YCoordinate:    input.Header.EventAddress[0].YCoordinate,
 						ZCoordinate:    input.Header.EventAddress[0].ZCoordinate,
+					},
+				},
+				Counter: []Counter{
+					{
+						NumberOfLikes:          0,
+						NumberOfParticipations: 0,
+						NumberOfAttendances:    0,
+						CreationDate:           formattedDate,
+						CreationTime:           formattedTime,
+						LastChangeDate:         formattedDate,
+						LastChangeTime:         formattedTime,
+					},
+				},
+				Like: []Like{
+					{
+						BusinessPartner: input.Header.EventLike[0].BusinessPartner,
+						Like:            &like,
+						CreationDate:    formattedDate,
+						CreationTime:    formattedTime,
+						LastChangeDate:  formattedDate,
+						LastChangeTime:  formattedTime,
 					},
 				},
 				//				PointConditionElement: []PointConditionElement{
@@ -350,13 +406,83 @@ func EventCreatesRequestParticipation(
 				Event: input.Header.Event,
 				Participation: []Participation{
 					{
-						Participator:                   input.Header.EventParticipation[0].Participator,
-						Participation:                  input.Header.EventParticipation[0].Participation,
-						CreationDate:                   formattedDate,
-						CreationTime:                   formattedTime,
-						LastChangeDate:                 formattedDate,
-						LastChangeTime:                 formattedTime,
-						IsCancelled:                    &isCancelled,
+						Participator:   input.Header.EventParticipation[0].Participator,
+						Participation:  input.Header.EventParticipation[0].Participation,
+						CreationDate:   formattedDate,
+						CreationTime:   formattedTime,
+						LastChangeDate: formattedDate,
+						LastChangeTime: formattedTime,
+						IsCancelled:    &isCancelled,
+					},
+				},
+			},
+		},
+	)
+
+	marshaledRequest, err := json.Marshal(request)
+	if err != nil {
+		services.HandleError(
+			controller,
+			err,
+			nil,
+		)
+	}
+
+	responseBody := services.Request(
+		aPIServiceName,
+		aPIType,
+		ioutil.NopCloser(strings.NewReader(string(marshaledRequest))),
+		controller,
+	)
+
+	return responseBody
+}
+
+func FuncEventCreatesRequestAttendance(
+	requestPram *types.Request,
+	input EventReq,
+) EventReq {
+	req := EventReq{
+		Header:  input.Header,
+		APIType: "creates",
+		Accepter: []string{
+			"Attendance",
+		},
+	}
+	return req
+}
+
+func EventCreatesRequestAttendance(
+	requestPram *types.Request,
+	input types.EventSDC,
+	controller *beego.Controller,
+) []byte {
+	aPIServiceName := "DPFM_API_EVENT_SRV"
+	aPIType := "creates"
+
+	currentDateTime := time.Now()
+	formattedDate := currentDateTime.Format("2006-01-02")
+	formattedTime := currentDateTime.Format("15:04:05")
+
+	var request EventReq
+
+	isCancelled := false
+
+	request = FuncEventCreatesRequestAttendance(
+		requestPram,
+		EventReq{
+			Header: Header{
+				Event: input.Header.Event,
+				Attendance: []Attendance{
+					{
+						Attender:       input.Header.EventAttendance[0].Attender,
+						Attendance:     input.Header.EventAttendance[0].Attendance,
+						Participation:  1,
+						CreationDate:   formattedDate,
+						CreationTime:   formattedTime,
+						LastChangeDate: formattedDate,
+						LastChangeTime: formattedTime,
+						IsCancelled:    &isCancelled,
 					},
 				},
 			},
@@ -497,6 +623,7 @@ func EventUpdatesRequestHeader(
 				EventOwner:                    input.Header.EventOwner,
 				EventOwnerBusinessPartnerRole: input.Header.EventOwnerBusinessPartnerRole,
 				PersonResponsible:             input.Header.PersonResponsible,
+				URL:                           input.Header.URL,
 				ValidityStartDate:             input.Header.ValidityStartDate,
 				ValidityStartTime:             input.Header.ValidityStartTime,
 				ValidityEndDate:               input.Header.ValidityEndDate,
@@ -509,6 +636,8 @@ func EventUpdatesRequestHeader(
 				LongText:                      input.Header.LongText,
 				Introduction:                  input.Header.Introduction,
 				Site:                          input.Header.Site,
+				Capacity:                      input.Header.Capacity,
+				Shop:                          input.Header.Shop,
 				Tag1:                          input.Header.Tag1,
 				Tag2:                          input.Header.Tag2,
 				Tag3:                          input.Header.Tag3,
@@ -520,6 +649,258 @@ func EventUpdatesRequestHeader(
 				LastChangeDate:                formattedDate,
 				LastChangeTime:                formattedTime,
 				LastChangeUser:                input.Header.LastChangeUser,
+			},
+		},
+	)
+
+	marshaledRequest, err := json.Marshal(request)
+	if err != nil {
+		services.HandleError(
+			controller,
+			err,
+			nil,
+		)
+	}
+
+	responseBody := services.Request(
+		aPIServiceName,
+		aPIType,
+		ioutil.NopCloser(strings.NewReader(string(marshaledRequest))),
+		controller,
+	)
+
+	return responseBody
+}
+
+func FuncEventUpdatesRequestCounter(
+	requestPram *types.Request,
+	input EventReq,
+) EventReq {
+	req := EventReq{
+		Header:  input.Header,
+		APIType: "updates",
+		Accepter: []string{
+			"Counter",
+		},
+	}
+	return req
+}
+
+func EventUpdatesRequestCounter(
+	requestPram *types.Request,
+	input types.EventSDC,
+	controller *beego.Controller,
+) []byte {
+	aPIServiceName := "DPFM_API_EVENT_SRV"
+	aPIType := "updates"
+
+	currentDateTime := time.Now()
+	formattedDate := currentDateTime.Format("2006-01-02")
+	formattedTime := currentDateTime.Format("15:04:05")
+
+	var request EventReq
+
+	request = FuncEventUpdatesRequestCounter(
+		requestPram,
+		EventReq{
+			Header: Header{
+				Event: input.Header.Event,
+				Counter: []Counter{
+					{
+						NumberOfLikes:          input.Header.EventCounter[0].NumberOfLikes,
+						NumberOfParticipations: input.Header.EventCounter[0].NumberOfParticipations,
+						NumberOfAttendances:    input.Header.EventCounter[0].NumberOfAttendances,
+						LastChangeDate:         formattedDate,
+						LastChangeTime:         formattedTime,
+					},
+				},
+			},
+		},
+	)
+
+	marshaledRequest, err := json.Marshal(request)
+	if err != nil {
+		services.HandleError(
+			controller,
+			err,
+			nil,
+		)
+	}
+
+	responseBody := services.Request(
+		aPIServiceName,
+		aPIType,
+		ioutil.NopCloser(strings.NewReader(string(marshaledRequest))),
+		controller,
+	)
+
+	return responseBody
+}
+
+func FuncEventUpdatesRequestLike(
+	requestPram *types.Request,
+	input EventReq,
+) EventReq {
+	req := EventReq{
+		Header:  input.Header,
+		APIType: "updates",
+		Accepter: []string{
+			"Like",
+		},
+	}
+	return req
+}
+
+func EventUpdatesRequestLike(
+	requestPram *types.Request,
+	input types.EventSDC,
+	controller *beego.Controller,
+) []byte {
+	aPIServiceName := "DPFM_API_EVENT_SRV"
+	aPIType := "updates"
+
+	currentDateTime := time.Now()
+	formattedDate := currentDateTime.Format("2006-01-02")
+	formattedTime := currentDateTime.Format("15:04:05")
+
+	var request EventReq
+
+	request = FuncEventUpdatesRequestLike(
+		requestPram,
+		EventReq{
+			Header: Header{
+				Event: input.Header.Event,
+				Like: []Like{
+					{
+						BusinessPartner: input.Header.EventLike[0].BusinessPartner,
+						Like:            input.Header.EventLike[0].Like,
+						LastChangeDate:  formattedDate,
+						LastChangeTime:  formattedTime,
+					},
+				},
+			},
+		},
+	)
+
+	marshaledRequest, err := json.Marshal(request)
+	if err != nil {
+		services.HandleError(
+			controller,
+			err,
+			nil,
+		)
+	}
+
+	responseBody := services.Request(
+		aPIServiceName,
+		aPIType,
+		ioutil.NopCloser(strings.NewReader(string(marshaledRequest))),
+		controller,
+	)
+
+	return responseBody
+}
+
+func FuncEventCancelsRequestHeader(
+	requestPram *types.Request,
+	input EventReq,
+) EventReq {
+	req := EventReq{
+		Header:  input.Header,
+		APIType: "cancels",
+		Accepter: []string{
+			"Header",
+		},
+	}
+	return req
+}
+
+func EventCancelsRequestHeader(
+	requestPram *types.Request,
+	input types.EventSDC,
+	controller *beego.Controller,
+) []byte {
+	aPIServiceName := "DPFM_API_EVENT_SRV"
+	aPIType := "cancels"
+
+	//	currentDateTime := time.Now()
+	//	formattedDate := currentDateTime.Format("2006-01-02")
+	//	formattedTime := currentDateTime.Format("15:04:05")
+
+	var request EventReq
+
+	isCancelled := true
+
+	request = FuncEventCancelsRequestHeader(
+		requestPram,
+		EventReq{
+			Header: Header{
+				Event:       input.Header.Event,
+				IsCancelled: &isCancelled,
+			},
+		},
+	)
+
+	marshaledRequest, err := json.Marshal(request)
+	if err != nil {
+		services.HandleError(
+			controller,
+			err,
+			nil,
+		)
+	}
+
+	responseBody := services.Request(
+		aPIServiceName,
+		aPIType,
+		ioutil.NopCloser(strings.NewReader(string(marshaledRequest))),
+		controller,
+	)
+
+	return responseBody
+}
+
+func FuncEventCancelsRequestParticipation(
+	requestPram *types.Request,
+	input EventReq,
+) EventReq {
+	req := EventReq{
+		Header:  input.Header,
+		APIType: "cancels",
+		Accepter: []string{
+			"Participation",
+		},
+	}
+	return req
+}
+
+func EventCancelsRequestParticipation(
+	requestPram *types.Request,
+	input types.EventSDC,
+	controller *beego.Controller,
+) []byte {
+	aPIServiceName := "DPFM_API_EVENT_SRV"
+	aPIType := "cancels"
+
+	//	currentDateTime := time.Now()
+	//	formattedDate := currentDateTime.Format("2006-01-02")
+	//	formattedTime := currentDateTime.Format("15:04:05")
+
+	var request EventReq
+
+	isCancelled := true
+
+	request = FuncEventCancelsRequestParticipation(
+		requestPram,
+		EventReq{
+			Header: Header{
+				Event: input.Header.Event,
+				Participation: []Participation{
+					{
+						Participator: input.Header.EventParticipation[0].Participator,
+						IsCancelled:  &isCancelled,
+					},
+				},
 			},
 		},
 	)

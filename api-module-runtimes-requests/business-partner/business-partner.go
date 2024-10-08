@@ -47,12 +47,16 @@ type General struct {
 	BusinessPartnerIsBlocked      *bool                     `json:"BusinessPartnerIsBlocked"`
 	CertificateAuthorityChain     *string                   `json:"CertificateAuthorityChain"`
 	UsageControlChain             *string                   `json:"UsageControlChain"`
+	Withdrawal           		  *bool						`json:"Withdrawal"`
 	CreationDate                  string                    `json:"CreationDate"`
 	LastChangeDate                string                    `json:"LastChangeDate"`
+	IsReleased                    *bool                     `json:"IsReleased"`
 	IsMarkedForDeletion           *bool                     `json:"IsMarkedForDeletion"`
 	Role                          []Role                    `json:"Role"`
 	Person                        []Person                  `json:"Person"`
 	Address                       []Address                 `json:"Address"`
+	SNS                           []SNS                     `json:"SNS"`
+	GPS                           []GPS                     `json:"GPS"`
 	Rank                          []Rank                    `json:"Rank"`
 	PersonMobilePhoneAuth         []PersonMobilePhoneAuth   `json:"PersonMobilePhoneAuth"`
 	PersonGoogleAccountAuth       []PersonGoogleAccountAuth `json:"PersonGoogleAccountAuth"`
@@ -72,15 +76,15 @@ type Role struct {
 type Person struct {
 	BusinessPartner          int     `json:"BusinessPartner"`
 	BusinessPartnerType      string  `json:"BusinessPartnerType"`
-	FirstName                *string `json:"FirstName"`
-	LastName                 *string `json:"LastName"`
-	FullName                 *string `json:"FullName"`
+	FirstName                string  `json:"FirstName"`
+	LastName                 string  `json:"LastName"`
+	FullName                 string  `json:"FullName"`
 	MiddleName               *string `json:"MiddleName"`
 	NickName                 string  `json:"NickName"`
 	Gender                   string  `json:"Gender"`
 	Language                 string  `json:"Language"`
 	CorrespondenceLanguage   *string `json:"CorrespondenceLanguage"`
-	BirthDate                *string `json:"BirthDate"`
+	BirthDate                string  `json:"BirthDate"`
 	Nationality              string  `json:"Nationality"`
 	EmailAddress             *string `json:"EmailAddress"`
 	MobilePhoneNumber        *string `json:"MobilePhoneNumber"`
@@ -89,6 +93,7 @@ type Person struct {
 	PreferableLocalRegion    string  `json:"PreferableLocalRegion"`
 	PreferableCountry        string  `json:"PreferableCountry"`
 	ActPurpose               string  `json:"ActPurpose"`
+	TermsOfUseIsConfirmed    *bool   `json:"TermsOfUseIsConfirmed"`
 	CreationDate             string  `json:"CreationDate"`
 	LastChangeDate           string  `json:"LastChangeDate"`
 	IsMarkedForDeletion      *bool   `json:"IsMarkedForDeletion"`
@@ -113,6 +118,34 @@ type Address struct {
 	YCoordinate     *float32 `json:"YCoordinate"`
 	ZCoordinate     *float32 `json:"ZCoordinate"`
 	Site            *int     `json:"Site"`
+}
+
+type SNS struct {
+	BusinessPartner     int     `json:"BusinessPartner"`
+	BusinessPartnerType string  `json:"BusinessPartnerType"`
+	XURL                *string `json:"XURL"`
+	InstagramURL        *string `json:"InstagramURL"`
+	TikTokURL           *string `json:"TikTokURL"`
+	PointAppsURL        string  `json:"PointAppsURL"`
+	CreationDate        string  `json:"CreationDate"`
+	LastChangeDate      string  `json:"LastChangeDate"`
+	IsMarkedForDeletion *bool   `json:"IsMarkedForDeletion"`
+}
+
+type GPS struct {
+	BusinessPartner     int     `json:"BusinessPartner"`
+	BusinessPartnerType string  `json:"BusinessPartnerType"`
+	XCoordinate         float32 `json:"XCoordinate"`
+	YCoordinate         float32 `json:"YCoordinate"`
+	ZCoordinate         float32 `json:"ZCoordinate"`
+	LocalSubRegion      string  `json:"LocalSubRegion"`
+	LocalRegion         string  `json:"LocalRegion"`
+	Country             string  `json:"Country"`
+	CreationDate        string  `json:"CreationDate"`
+	CreationTime        string  `json:"CreationTime"`
+	LastChangeDate      string  `json:"LastChangeDate"`
+	LastChangeTime      string  `json:"LastChangeTime"`
+	IsMarkedForDeletion *bool   `json:"IsMarkedForDeletion"`
 }
 
 type Rank struct {
@@ -174,6 +207,7 @@ func FuncBusinessPartnerCreatesRequestAll(
 			"Role",
 			"Person",
 			"Address",
+			"SNS",
 			"Rank",
 		},
 	}
@@ -193,7 +227,18 @@ func BusinessPartnerCreatesRequestAll(
 
 	var request BusinessPartnerReq
 
+	termsOfUseIsConfirmed := true
+
+	withdrawal := false
+	isReleased := true
 	isMarkedForDeletion := false
+
+	xURL := ""
+	instagramURL := ""
+	tikTokURL := ""
+	pointAppsURL := ""
+
+	profileComment := "ここにプロフィールコメントを入力してください"
 
 	request = FuncBusinessPartnerCreatesRequestAll(
 		requestPram,
@@ -201,12 +246,13 @@ func BusinessPartnerCreatesRequestAll(
 			General: General{
 				BusinessPartner:     nil,
 				BusinessPartnerType: "02",
-				BusinessPartnerName: input.General.BusinessPartnerName,
-				Country:             input.General.Country,
+				BusinessPartnerName: "hidden",
+				Country:             "JP",
 				Language:            input.General.Language,
-				AddressID:           input.General.AddressID,
+				Withdrawal:          &withdrawal,
 				CreationDate:        formattedDate,
 				LastChangeDate:      formattedDate,
+				IsReleased:          &isReleased,
 				IsMarkedForDeletion: &isMarkedForDeletion,
 				Role: []Role{
 					{
@@ -227,13 +273,16 @@ func BusinessPartnerCreatesRequestAll(
 						NickName:                 input.General.BusinessPartnerPerson[0].NickName,
 						Gender:                   input.General.BusinessPartnerPerson[0].Gender,
 						Language:                 input.General.BusinessPartnerPerson[0].Language,
+						BirthDate:                input.General.BusinessPartnerPerson[0].BirthDate,
 						Nationality:              input.General.BusinessPartnerPerson[0].Nationality,
 						EmailAddress:             input.General.BusinessPartnerPerson[0].EmailAddress,
 						MobilePhoneNumber:        input.General.BusinessPartnerPerson[0].MobilePhoneNumber,
+						ProfileComment:           &profileComment,
 						PreferableLocalSubRegion: input.General.BusinessPartnerPerson[0].PreferableLocalSubRegion,
 						PreferableLocalRegion:    input.General.BusinessPartnerPerson[0].PreferableLocalRegion,
-						PreferableCountry:        input.General.BusinessPartnerPerson[0].PreferableCountry,
+						PreferableCountry:        "JP",
 						ActPurpose:               input.General.BusinessPartnerPerson[0].ActPurpose,
+						TermsOfUseIsConfirmed:    &termsOfUseIsConfirmed,
 						CreationDate:             formattedDate,
 						LastChangeDate:           formattedDate,
 						IsMarkedForDeletion:      &isMarkedForDeletion,
@@ -244,14 +293,26 @@ func BusinessPartnerCreatesRequestAll(
 						AddressID:      input.General.BusinessPartnerAddress[0].AddressID,
 						LocalSubRegion: input.General.BusinessPartnerAddress[0].LocalSubRegion,
 						LocalRegion:    input.General.BusinessPartnerAddress[0].LocalRegion,
-						Country:        input.General.BusinessPartnerAddress[0].Country,
-						GlobalRegion:   input.General.BusinessPartnerAddress[0].GlobalRegion,
-						TimeZone:       input.General.BusinessPartnerAddress[0].TimeZone,
+						Country:        "JP",
+						GlobalRegion:   "AS",
+						TimeZone:       "JST",
+					},
+				},
+				SNS: []SNS{
+					{
+						BusinessPartnerType: "02",
+						XURL:                &xURL,
+						InstagramURL:        &instagramURL,
+						TikTokURL:           &tikTokURL,
+						PointAppsURL:        pointAppsURL,
+						CreationDate:        formattedDate,
+						LastChangeDate:      formattedDate,
+						IsMarkedForDeletion: &isMarkedForDeletion,
 					},
 				},
 				Rank: []Rank{
 					{
-						RankType:            "0001",
+						RankType:            "PTAP",
 						Rank:                1,
 						ValidityStartDate:   formattedDate,
 						ValidityEndDate:     "9999-12-31",
@@ -557,6 +618,63 @@ func BusinessPartnerCreatesRequestPersonInstagramAuth(
 	return responseBody
 }
 
+func FuncBusinessPartnerUpdatesRequestGeneral(
+	requestPram *types.Request,
+	input BusinessPartnerReq,
+) BusinessPartnerReq {
+	req := BusinessPartnerReq{
+		General: input.General,
+		APIType: "updates",
+		Accepter: []string{
+			"General",
+		},
+	}
+	return req
+}
+
+func BusinessPartnerUpdatesRequestGeneral(
+	requestPram *types.Request,
+	input types.BusinessPartnerSDC,
+	controller *beego.Controller,
+) []byte {
+	aPIServiceName := "DPFM_API_BUSINESS_PARTNER_SRV"
+	aPIType := "updates"
+
+	currentDateTime := time.Now()
+	formattedDate := currentDateTime.Format("2006-01-02")
+
+	var request BusinessPartnerReq
+
+	request = FuncBusinessPartnerUpdatesRequestGeneral(
+		requestPram,
+		BusinessPartnerReq{
+			General: General{
+				BusinessPartner:	input.General.BusinessPartner,
+				Withdrawal:			input.General.Withdrawal,
+				LastChangeDate:		formattedDate,
+			},
+		},
+	)
+
+	marshaledRequest, err := json.Marshal(request)
+	if err != nil {
+		services.HandleError(
+			controller,
+			err,
+			nil,
+		)
+	}
+
+	responseBody := services.Request(
+		aPIServiceName,
+		aPIType,
+		ioutil.NopCloser(strings.NewReader(string(marshaledRequest))),
+		controller,
+	)
+
+	return responseBody
+}
+
 func FuncBusinessPartnerUpdatesRequestPerson(
 	requestPram *types.Request,
 	input BusinessPartnerReq,
@@ -584,8 +702,6 @@ func BusinessPartnerUpdatesRequestPerson(
 
 	var request BusinessPartnerReq
 
-	isMarkedForDeletion := false
-
 	request = FuncBusinessPartnerUpdatesRequestPerson(
 		requestPram,
 		BusinessPartnerReq{
@@ -609,7 +725,6 @@ func BusinessPartnerUpdatesRequestPerson(
 						PreferableCountry:        input.General.BusinessPartnerPerson[0].PreferableCountry,
 						ActPurpose:               input.General.BusinessPartnerPerson[0].ActPurpose,
 						LastChangeDate:           formattedDate,
-						IsMarkedForDeletion:      &isMarkedForDeletion,
 					},
 				},
 			},
@@ -735,8 +850,6 @@ func BusinessPartnerUpdatesRequestRank(
 
 	var request BusinessPartnerReq
 
-	isMarkedForDeletion := false
-
 	request = FuncBusinessPartnerUpdatesRequestRank(
 		requestPram,
 		BusinessPartnerReq{
@@ -744,12 +857,75 @@ func BusinessPartnerUpdatesRequestRank(
 				BusinessPartner: input.General.BusinessPartner,
 				Rank: []Rank{
 					{
-						RankType:            input.General.BusinessPartnerRank[0].RankType,
-						Rank:                input.General.BusinessPartnerRank[0].Rank,
-						ValidityStartDate:   input.General.BusinessPartnerRank[0].ValidityStartDate,
-						ValidityEndDate:     input.General.BusinessPartnerRank[0].ValidityEndDate,
-						LastChangeDate:      formattedDate,
-						IsMarkedForDeletion: &isMarkedForDeletion,
+						RankType:          input.General.BusinessPartnerRank[0].RankType,
+						Rank:              input.General.BusinessPartnerRank[0].Rank,
+						ValidityStartDate: input.General.BusinessPartnerRank[0].ValidityStartDate,
+						ValidityEndDate:   input.General.BusinessPartnerRank[0].ValidityEndDate,
+						LastChangeDate:    formattedDate,
+					},
+				},
+			},
+		},
+	)
+
+	marshaledRequest, err := json.Marshal(request)
+	if err != nil {
+		services.HandleError(
+			controller,
+			err,
+			nil,
+		)
+	}
+
+	responseBody := services.Request(
+		aPIServiceName,
+		aPIType,
+		ioutil.NopCloser(strings.NewReader(string(marshaledRequest))),
+		controller,
+	)
+
+	return responseBody
+}
+
+func FuncBusinessPartnerUpdatesRequestSNS(
+	requestPram *types.Request,
+	input BusinessPartnerReq,
+) BusinessPartnerReq {
+	req := BusinessPartnerReq{
+		General: input.General,
+		APIType: "updates",
+		Accepter: []string{
+			"SNS",
+		},
+	}
+	return req
+}
+
+func BusinessPartnerUpdatesRequestSNS(
+	requestPram *types.Request,
+	input types.BusinessPartnerSDC,
+	controller *beego.Controller,
+) []byte {
+	aPIServiceName := "DPFM_API_BUSINESS_PARTNER_SRV"
+	aPIType := "updates"
+
+	currentDateTime := time.Now()
+	formattedDate := currentDateTime.Format("2006-01-02")
+
+	var request BusinessPartnerReq
+
+	request = FuncBusinessPartnerUpdatesRequestSNS(
+		requestPram,
+		BusinessPartnerReq{
+			General: General{
+				BusinessPartner: input.General.BusinessPartner,
+				SNS: []SNS{
+					{
+						XURL:           input.General.BusinessPartnerSNS[0].XURL,
+						InstagramURL:   input.General.BusinessPartnerSNS[0].InstagramURL,
+						TikTokURL:      input.General.BusinessPartnerSNS[0].TikTokURL,
+						PointAppsURL:   input.General.BusinessPartnerSNS[0].PointAppsURL,
+						LastChangeDate: formattedDate,
 					},
 				},
 			},
@@ -802,8 +978,6 @@ func BusinessPartnerUpdatesRequestPersonMobilePhoneAuth(
 
 	var request BusinessPartnerReq
 
-	isMarkedForDeletion := false
-
 	request = FuncBusinessPartnerUpdatesRequestPersonMobilePhoneAuth(
 		requestPram,
 		BusinessPartnerReq{
@@ -813,7 +987,6 @@ func BusinessPartnerUpdatesRequestPersonMobilePhoneAuth(
 					{
 						MobilePhoneIsAuthenticated: input.General.BusinessPartnerPersonMobilePhoneAuth[0].MobilePhoneIsAuthenticated,
 						LastChangeDate:             formattedDate,
-						IsMarkedForDeletion:        &isMarkedForDeletion,
 					},
 				},
 			},
@@ -880,8 +1053,6 @@ func BusinessPartnerUpdatesRequestPersonGoogleAccountAuth(
 
 	var request BusinessPartnerReq
 
-	isMarkedForDeletion := false
-
 	request = FuncBusinessPartnerUpdatesRequestPersonGoogleAccountAuth(
 		requestPram,
 		BusinessPartnerReq{
@@ -891,7 +1062,6 @@ func BusinessPartnerUpdatesRequestPersonGoogleAccountAuth(
 					{
 						GoogleAccountIsAuthenticated: input.General.BusinessPartnerPersonGoogleAccountAuth[0].GoogleAccountIsAuthenticated,
 						LastChangeDate:               formattedDate,
-						IsMarkedForDeletion:          &isMarkedForDeletion,
 					},
 				},
 			},
@@ -930,8 +1100,6 @@ func BusinessPartnerUpdatesRequestPersonInstagramAuth(
 
 	var request BusinessPartnerReq
 
-	isMarkedForDeletion := false
-
 	request = FuncBusinessPartnerUpdatesRequestPersonInstagramAuth(
 		requestPram,
 		BusinessPartnerReq{
@@ -947,7 +1115,6 @@ func BusinessPartnerUpdatesRequestPersonInstagramAuth(
 						InstagramIsPublished:       input.General.BusinessPartnerPersonInstagramAuth[0].InstagramIsPublished,
 						InstagramIsAuthenticated:   input.General.BusinessPartnerPersonInstagramAuth[0].InstagramIsAuthenticated,
 						LastChangeDate:             formattedDate,
-						IsMarkedForDeletion:        &isMarkedForDeletion,
 					},
 				},
 			},

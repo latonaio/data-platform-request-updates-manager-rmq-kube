@@ -28,6 +28,7 @@ type EventHeader struct {
 	EventOwner                    int                          `json:"EventOwner"`
 	EventOwnerBusinessPartnerRole string                       `json:"EventOwnerBusinessPartnerRole"`
 	PersonResponsible             string                       `json:"PersonResponsible"`
+	URL							  *string					   `json:"URL"`
 	ValidityStartDate             string                       `json:"ValidityStartDate"`
 	ValidityStartTime             string                       `json:"ValidityStartTime"`
 	ValidityEndDate               string                       `json:"ValidityEndDate"`
@@ -40,6 +41,8 @@ type EventHeader struct {
 	LongText                      string                       `json:"LongText"`
 	Introduction                  *string                      `json:"Introduction"`
 	Site                          int                          `json:"Site"`
+	Capacity					  int						   `json:"Capacity"`
+	Shop						  *int						   `json:"Shop"`
 	Project                       *int                         `json:"Project"`
 	WBSElement                    *int                         `json:"WBSElement"`
 	Tag1                          *string                      `json:"Tag1"`
@@ -67,6 +70,8 @@ type EventHeader struct {
 	EventAttendance		          []EventAttendance            `json:"EventAttendance"`
 	EventPointTransaction         []EventPointTransaction      `json:"PointTransaction"`
 	EventPointConditionElement    []EventPointConditionElement `json:"PointConditionElement"`
+	EventCounter			      []EventCounter			   `json:"Counter"`
+	EventLike				      []EventLike			   	   `json:"Like"`
 }
 
 type EventPartner struct {
@@ -184,6 +189,27 @@ type EventPointConditionElement struct {
 	IsReleased                     *bool   `json:"IsReleased"`
 	IsCancelled                    *bool   `json:"IsCancelled"`
 	IsMarkedForDeletion            *bool   `json:"IsMarkedForDeletion"`
+}
+
+type EventCounter struct {
+	Event					int		`json:"Event"`
+	NumberOfLikes			int		`json:"NumberOfLikes"`
+	NumberOfParticipations	int		`json:"NumberOfParticipations"`
+	NumberOfAttendances		int		`json:"NumberOfAttendances"`
+	CreationDate			string	`json:"CreationDate"`
+	CreationTime			string	`json:"CreationTime"`
+	LastChangeDate			string	`json:"LastChangeDate"`
+	LastChangeTime			string	`json:"LastChangeTime"`
+}
+
+type EventLike struct {
+	Event					int		`json:"Event"`
+	BusinessPartner			int		`json:"BusinessPartner"`
+	Like					*bool	`json:"Like"`
+	CreationDate			string	`json:"CreationDate"`
+	CreationTime			string	`json:"CreationTime"`
+	LastChangeDate			string	`json:"LastChangeDate"`
+	LastChangeTime			string	`json:"LastChangeTime"`
 }
 
 func EventInputRead(

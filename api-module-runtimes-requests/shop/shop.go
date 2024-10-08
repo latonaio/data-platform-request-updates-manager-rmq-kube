@@ -163,13 +163,13 @@ func ShopCreatesRequestAll(
                 IsMarkedForDeletion:    		&isMarkedForDeletion,
 				Address:	[]Address{
 					{
-						AddressID:			input.Header.ShopAddress[0].AddressID,
-						PostalCode:			input.Header.ShopAddress[0].PostalCode,
+						AddressID:			1,
+						PostalCode:			"999-9999",
 						LocalSubRegion:		input.Header.ShopAddress[0].LocalSubRegion,
 						LocalRegion:		input.Header.ShopAddress[0].LocalRegion,
 						Country:			input.Header.ShopAddress[0].Country,
-						GlobalRegion:		input.Header.ShopAddress[0].GlobalRegion,
-						TimeZone:			input.Header.ShopAddress[0].TimeZone,
+						GlobalRegion:		"AS",
+						TimeZone:			"JST",
 						District:			input.Header.ShopAddress[0].District,
 						StreetName:			input.Header.ShopAddress[0].StreetName,
 						CityName:			input.Header.ShopAddress[0].CityName,
